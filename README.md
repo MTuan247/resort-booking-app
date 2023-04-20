@@ -1,3 +1,3 @@
-# resort-web-app
+# resort-app
 
-- Hệ thống thông tin khu nghỉ dưỡng
+- Hệ thống quản lý dịch vụ khu nghỉ dưỡng
