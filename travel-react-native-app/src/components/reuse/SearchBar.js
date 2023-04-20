@@ -6,6 +6,8 @@ import { Ionicons, FontAwesome } from 'react-native-vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import BaseButton from '../base/BaseButton';
 import BaseInput from '../base/BaseInput';
+import { useNavigation } from '@react-navigation/native';
+import screens from '../../resources/screens';
 
 /**
  * Input trong searchBar
@@ -37,6 +39,8 @@ export default function SearchBar({ style }) {
   const [calendar, setCalender] = useState(false);
   const [date, setDate] = useState(new Date());
 
+  const navigation = useNavigation();
+
   const showCalender = () => {
     setCalender(true);
   }
@@ -62,7 +66,7 @@ export default function SearchBar({ style }) {
       />
       {calendar && <DateTimePicker onChange={onChangeDate} value={date} />}
       <HStack alignSelf="center">
-        <BaseButton mt={1} width="40%" backgroundColor={global.theme.COLORS.PRIMARY}>Tìm kiếm</BaseButton>
+        <BaseButton onPress={() => navigation.navigate(screens.STACKS.HOME, { screen: screens.SCREEN.SEARCH})} mt={1} width="40%" backgroundColor={global.theme.COLORS.PRIMARY}>Tìm kiếm</BaseButton>
       </HStack>
     </VStack>
   )

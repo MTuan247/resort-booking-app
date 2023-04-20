@@ -1,6 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 
 import FavoriteScreen from '../screens/Favorite';
+import screens from '../resources/screens';
 
 const Stack = createStackNavigator();
 
@@ -17,7 +18,7 @@ export default function ArchiveStack(props) {
         headerShown: false
       }}
     >
-      <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
+      <Stack.Screen name={screens.SCREEN.FAVOURITE} component={FavoriteScreen} />
     </Stack.Navigator>
   );
 }

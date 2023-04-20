@@ -11,7 +11,7 @@ const theme = {
     BACKGROUND: '#F2F5FA',
     BORDER: '#546A83',
     GRAY: '#D2DBEA',
-    CARD: '#546A83',
+    CARD: '#F2F5FA',
     TEXT: '#37CAEC',
     EMERALD: '#18C0C1',
     BLUE: '#1254BB',

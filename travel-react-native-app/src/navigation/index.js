@@ -8,6 +8,7 @@ import HomeStack from './HomeStack';
 import ArchiveStack from './ArchiveStack';
 import BookingStack from './BookingStack';
 import ProfileStack from './ProfileStack';
+import screens from '../resources/screens';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -62,10 +63,10 @@ const styles = StyleSheet.create({
 function BottomTab() {
   return (
     <Tab.Navigator>
-        <Tab.Screen name="HomeStack" component={HomeStack} options={tabConfig.Home}/>
-        <Tab.Screen name="ArchiveStack" component={ArchiveStack} options={tabConfig.Favorite} />
-        <Tab.Screen name="BookingStack" component={BookingStack} options={tabConfig.Booking} />
-        <Tab.Screen name="ProfileStack" component={ProfileStack}options={tabConfig.Profile} />
+        <Tab.Screen name={screens.STACKS.HOME} component={HomeStack} options={tabConfig.Home}/>
+        <Tab.Screen name={screens.STACKS.ARCHIVE} component={ArchiveStack} options={tabConfig.Favorite} />
+        <Tab.Screen name={screens.STACKS.BOOKING} component={BookingStack} options={tabConfig.Booking} />
+        <Tab.Screen name={screens.STACKS.PROFILE} component={ProfileStack}options={tabConfig.Profile} />
     </Tab.Navigator>
   )
 }
