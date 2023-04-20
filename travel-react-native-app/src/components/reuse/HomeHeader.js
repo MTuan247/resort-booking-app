@@ -32,10 +32,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     lineHeight: 24,
-    fontWeight: 600,
     flex: 1,
     textAlign: 'center',
-    fontFamily: 'Poppins'
+    fontFamily: global.theme.FONTS.SEMIBOLD
   },
   notification: {
     backgroundColor: global.theme.COLORS.WHITE,

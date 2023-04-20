@@ -1,5 +1,6 @@
 
 import { DefaultTheme } from '@react-navigation/native';
+import { extendTheme } from "native-base";
 
 const theme = {
   COLORS: {
@@ -9,14 +10,16 @@ const theme = {
     SECONDARY: '#2A93D5',
     BACKGROUND: '#F2F5FA',
     BORDER: '#546A83',
-    CARD: '#F2F5FA',
+    GRAY: '#D2DBEA',
+    CARD: '#546A83',
     TEXT: '#37CAEC',
     EMERALD: '#18C0C1',
     BLUE: '#1254BB',
   },
   FONTS: {
     PRIMARY: 'Poppins',
-    POPPINS: 'Poppins'
+    BOLD: 'Poppins-Bold',
+    SEMIBOLD: 'Poppins-SemiBold'
   }
 }
 
@@ -35,6 +38,35 @@ const navigationTheme = {
   },
 }
 
-export { theme, navigationTheme}
+/**
+ * Theme cho nativebase
+ */
+const nativeBaseTheme = extendTheme({
+  fontConfig: {
+    [theme.FONTS.PRIMARY]: {
+      500: {
+        normal: theme.FONTS.PRIMARY,
+      },
+      600: {
+        normal: theme.FONTS.SEMIBOLD,
+      },
+      700: {
+        normal: theme.FONTS.BOLD,
+      },
+    },
+  },
+  colors: {
+    primary: {
+      500: theme.COLORS.PRIMARY,
+    },
+  },
+  fonts: {
+    heading: theme.FONTS.PRIMARY,
+    body: theme.FONTS.PRIMARY,
+    mono: theme.FONTS.PRIMARY,
+  },
+});
+
+export { theme, navigationTheme, nativeBaseTheme}
 
 global.theme = theme;

@@ -8,7 +8,7 @@ import { useCallback } from 'react';
 
 import './src/resources/theme'
 import Navigation from './src/navigation'
-import { navigationTheme } from './src/resources/theme';
+import { navigationTheme, nativeBaseTheme } from './src/resources/theme';
 
 export default function App() {
 
@@ -17,6 +17,8 @@ export default function App() {
    */
   const [fontsLoaded] = useFonts({
     'Poppins': require('./assets/fonts/Poppins/Poppins-Regular.ttf'),
+    'Poppins-SemiBold': require('./assets/fonts/Poppins/Poppins-SemiBold.ttf'),
+    'Poppins-Bold': require('./assets/fonts/Poppins/Poppins-Bold.ttf'),
   });
 
   /**
@@ -34,7 +36,7 @@ export default function App() {
 
   return (
     <NavigationContainer theme={navigationTheme}>
-      <NativeBaseProvider>
+      <NativeBaseProvider theme={nativeBaseTheme}>
         <Navigation />
       </NativeBaseProvider>
     </NavigationContainer>

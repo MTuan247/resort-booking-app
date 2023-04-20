@@ -5,6 +5,32 @@ import { Ionicons, FontAwesome } from 'react-native-vector-icons';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 import BaseButton from '../base/BaseButton';
+import BaseInput from '../base/BaseInput';
+
+/**
+ * Input trong searchBar
+ * @param {*} props 
+ * @returns 
+ */
+const SearchInput = (props) => {
+  return <BaseInput
+    width="100%"
+    borderRadius="12"
+    py="2"
+    backgroundColor={global.theme.COLORS.WHITE}
+    px="1"
+    borderWidth={0}
+    fontSize="16"
+    fontFamily={global.theme.FONTS.PRIMARY}
+    InputLeftElement={
+      <Icon
+        m="2" ml="3" size="6" color={global.theme.COLORS.BLACK}
+        as={props.leftIcon}
+      />
+    }
+    {...props}
+  />
+}
 
 export default function SearchBar({ style }) {
 
@@ -15,71 +41,24 @@ export default function SearchBar({ style }) {
     setCalender(true);
   }
 
-  const onChangeDate = () => {
+  const onChangeDate = (e, value) => {
     setCalender(false);
-
+    setDate(value);
   }
 
   return (
     <VStack style={style} space={2} alignSelf="center">
-      <Input
-        placeholder="Khu vực"
-        width="100%"
-        borderRadius="12"
-        py="2"
-        backgroundColor={global.theme.COLORS.WHITE}
-        px="1"
-        borderWidth={0}
-        fontSize="16"
-        fontFamily={global.theme.FONTS.PRIMARY}
-        InputLeftElement={
-          <Icon
-            m="2" ml="3" size="6" color={global.theme.COLORS.BLACK}
-            as={
-              <Ionicons name="search-outline" />
-            }
-          />
-        }
+      <SearchInput
+        leftIcon={<Ionicons name="search-outline" />}
       />
       <Pressable onPress={showCalender}>
-        <Input
-          width="100%"
-          borderRadius="12"
-          py="2"
-          backgroundColor={global.theme.COLORS.WHITE}
-          px="1"
-          fontSize="16"
-          borderWidth={0}
-          fontFamily={global.theme.FONTS.PRIMARY}
+        <SearchInput
           value={date.toLocaleString()}
           editable={false}
-          InputLeftElement={
-            <Icon
-              m="2" ml="3" size="6" color={global.theme.COLORS.BLACK}
-              as={
-                <FontAwesome name="calendar-o" />
-              }
-            />
-          }
+          leftIcon={<FontAwesome name="calendar-o" />}
         /></Pressable>
-      <Input
-        placeholder="Số người"
-        width="100%" 
-        borderRadius="12"
-        borderWidth={0}
-        backgroundColor={global.theme.COLORS.WHITE}
-        py="2"
-        px="1"
-        fontFamily={global.theme.FONTS.PRIMARY}
-        fontSize="16"
-        InputLeftElement={
-          <Icon
-            m="2" ml="3" size="6" color={global.theme.COLORS.BLACK}
-            as={
-              <Ionicons name="people-outline" />
-            }
-          />
-        }
+      <SearchInput
+        leftIcon={<Ionicons name="people-outline" />}
       />
       {calendar && <DateTimePicker onChange={onChangeDate} value={date} />}
       <HStack alignSelf="center">
