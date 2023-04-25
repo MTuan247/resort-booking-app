@@ -9,6 +9,7 @@ const screens = {
     HOME: 'HomeScreen',
     SEARCH: 'SearchScreen',
     FAVOURITE: 'FavouriteScreen',
+    RESORT: 'ResortScreen',
   }
 }
 

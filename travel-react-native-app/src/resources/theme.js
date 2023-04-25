@@ -10,6 +10,8 @@ const theme = {
     SECONDARY: '#2A93D5',
     BACKGROUND: '#F2F5FA',
     BORDER: '#546A83',
+    DARKGRAY: '#546A83',
+    LIGHTGRAY: '#7A7289',
     GRAY: '#D2DBEA',
     CARD: '#F2F5FA',
     TEXT: '#37CAEC',
@@ -32,7 +34,7 @@ const navigationTheme = {
     ...DefaultTheme.colors,
     primary: theme.COLORS.PRIMARY, // Màu chủ đạo
     background: theme.COLORS.BACKGROUND, // Màu background
-    border: theme.COLORS.BORDER, // Màu viền
+    border: theme.COLORS.DARKGRAY, // Màu viền
     card: theme.COLORS.CARD, // Màu nền của thanh bottom tab
     text: theme.COLORS.PRIMARY // Màu chữ header
   },
