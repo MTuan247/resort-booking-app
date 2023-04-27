@@ -13,7 +13,7 @@ export default function SearchCard(props) {
         }} alt={props.title}></Image>
         <VStack pl={2} flex={8}>
           <Heading noOfLines={2} fontWeight={600}>{props.title}</Heading>
-          <Text>{props.description}</Text>
+          <Text>{props.location}</Text>
           <Box justifyContent="flex-end" flex={1}>
             <Text fontWeight={500} fontSize={18} textAlign="right">{props.price}</Text>
           </Box>

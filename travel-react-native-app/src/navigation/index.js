@@ -10,6 +10,9 @@ import BookingStack from './BookingStack';
 import ProfileStack from './ProfileStack';
 import screens from '../resources/screens';
 
+import ResortScreen from '../screens/Resort';
+import ImageArticle from '../screens/ImageArticle';
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -72,6 +75,18 @@ function BottomTab() {
 }
 
 /**
+ * Config cho trang chi tiết
+ */
+const detailOptions = ({ route }) => ({
+  headerTitle: route.params.item.title,
+  headerTransparent: true,
+  headerTintColor: global.theme.COLORS.WHITE,
+  headerStyle: {
+    backgroundColor: global.theme.COLORS.DARKGRAY,
+  },
+})
+
+/**
  * Điều hướng
  * @param {*} props 
  * @returns JSX.Element
@@ -85,6 +100,8 @@ export default function Navigation(props) {
       }}
     >
       <Stack.Screen name="App" component={BottomTab} />
+      <Stack.Screen name="ImageScreen" component={ImageArticle} />
+      {/* <Stack.Screen options={detailOptions} name={screens.SCREEN.RESORT} component={ResortScreen} /> */}
     </Stack.Navigator>
   );
 }

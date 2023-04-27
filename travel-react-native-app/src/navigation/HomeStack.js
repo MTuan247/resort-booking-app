@@ -15,7 +15,7 @@ const stackOptions = {
   headerTintColor: global.theme.COLORS.BLACK,
   headerTitleStyle: {
     
-  }
+  },
 }
 
 /**
@@ -49,7 +49,8 @@ const detailOptions = ({ route }) => ({
  * @param {*} props 
  * @returns JSX.Element
  */
-export default function HomeStack(props) {
+export default function HomeStack({ navigation, route }) {
+
   return (
     <Stack.Navigator
       screenOptions={stackOptions}
