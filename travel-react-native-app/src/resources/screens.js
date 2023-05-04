@@ -8,7 +8,8 @@ const screens = {
   SCREEN: {
     HOME: 'HomeScreen',
     SEARCH: 'SearchScreen',
-    FAVOURITE: 'FavouriteScreen',
+    FAVORITE: 'FavoriteScreen',
+    ORDER: 'OrderScreen',
     RESORT: 'ResortScreen',
   }
 }

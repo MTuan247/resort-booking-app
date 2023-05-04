@@ -1,8 +1,16 @@
 import { createStackNavigator } from '@react-navigation/stack';
 
 import OrderScreen from '../screens/Order';
+import screens from '../resources/screens';
 
 const Stack = createStackNavigator();
+
+/**
+ * Config cho trang yêu thích
+ */
+const orderOptions = {
+  headerTitle: 'Đặt phòng'
+}
 
 /**
  * Stack màn hình
@@ -14,10 +22,10 @@ export default function BookingStack(props) {
     <Stack.Navigator
       screenOptions={{
         mode: 'card',
-        headerShown: false
+        headerTitleAlign: 'center'
       }}
     >
-      <Stack.Screen name="OrderScreen" component={OrderScreen} />
+      <Stack.Screen options={orderOptions} name={screens.SCREEN.ORDER} component={OrderScreen} />
     </Stack.Navigator>
   );
 }

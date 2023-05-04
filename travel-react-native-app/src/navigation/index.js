@@ -33,14 +33,16 @@ const tabConfig = {
     tabBarIcon: ({ focused, color, size }) => {
       let iconName = focused ? 'heart' : 'heart-outline';
       return <Icon as={Ionicons} name={iconName} size={size} color={color} />
-    }
+    },
+    headerShown: false
   },
   Booking: {
     title: "Đặt phòng",
     tabBarIcon: ({ focused, color, size }) => {
       let iconName = focused ? 'file-tray' : 'file-tray-outline';
       return <Icon as={Ionicons} name={iconName} size={size} color={color} />
-    }
+    },
+    headerShown: false
   },
   Profile: {
     title: "Tài khoản",
@@ -84,7 +86,9 @@ const detailOptions = ({ route }) => ({
   headerStyle: {
     backgroundColor: global.theme.COLORS.DARKGRAY,
   },
+  headerShown: true
 })
+
 
 /**
  * Điều hướng
@@ -101,7 +105,7 @@ export default function Navigation(props) {
     >
       <Stack.Screen name="App" component={BottomTab} />
       <Stack.Screen name="ImageScreen" component={ImageArticle} />
-      {/* <Stack.Screen options={detailOptions} name={screens.SCREEN.RESORT} component={ResortScreen} /> */}
+      <Stack.Screen options={detailOptions} name={screens.SCREEN.RESORT} component={ResortScreen} />
     </Stack.Navigator>
   );
 }

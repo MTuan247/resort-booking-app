@@ -5,6 +5,14 @@ import screens from '../resources/screens';
 
 const Stack = createStackNavigator();
 
+
+/**
+ * Config cho trang yêu thích
+ */
+const favoriteOptions = {
+  headerTitle: 'Yêu thích',
+}
+
 /**
  * Stack màn hình
  * @param {*} props 
@@ -15,10 +23,11 @@ export default function ArchiveStack(props) {
     <Stack.Navigator
       screenOptions={{
         mode: 'card',
-        headerShown: false
+        headerTintColor: global.theme.COLORS.BLACK,
+        headerTitleAlign: 'center'
       }}
     >
-      <Stack.Screen name={screens.SCREEN.FAVOURITE} component={FavoriteScreen} />
+      <Stack.Screen options={favoriteOptions} name={screens.SCREEN.FAVORITE} component={FavoriteScreen} />
     </Stack.Navigator>
   );
 }

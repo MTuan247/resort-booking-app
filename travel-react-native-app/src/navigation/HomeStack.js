@@ -35,14 +35,14 @@ const searchOptions = {
 /**
  * Config cho trang chi tiết
  */
-const detailOptions = ({ route }) => ({
-  headerTitle: route.params.item.title,
-  headerTransparent: true,
-  headerTintColor: global.theme.COLORS.WHITE,
-  headerStyle: {
-    backgroundColor: global.theme.COLORS.DARKGRAY,
-  },
-})
+// const detailOptions = ({ route }) => ({
+//   headerTitle: route.params.item.title,
+//   headerTransparent: true,
+//   headerTintColor: global.theme.COLORS.WHITE,
+//   headerStyle: {
+//     backgroundColor: global.theme.COLORS.DARKGRAY,
+//   },
+// })
 
 /**
  * Stack màn hình
@@ -57,7 +57,7 @@ export default function HomeStack({ navigation, route }) {
     >
       <Stack.Screen options={homeOptions} name={screens.SCREEN.HOME} component={HomeScreen} />
       <Stack.Screen options={searchOptions} name={screens.SCREEN.SEARCH} component={SearchScreen} />
-      <Stack.Screen options={detailOptions} name={screens.SCREEN.RESORT} component={ResortScreen} />
+      {/* <Stack.Screen options={detailOptions} name={screens.SCREEN.RESORT} component={ResortScreen} /> */}
     </Stack.Navigator>
   );
 }
