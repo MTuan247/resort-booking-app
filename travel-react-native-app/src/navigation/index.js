@@ -49,7 +49,8 @@ const tabConfig = {
     tabBarIcon: ({ focused, color, size }) => {
       let iconName = focused ? 'person' : 'person-outline';
       return <Icon as={Ionicons} name={iconName} size={size} color={color} />
-    }
+    },
+    headerShown: false
   },
 }
 

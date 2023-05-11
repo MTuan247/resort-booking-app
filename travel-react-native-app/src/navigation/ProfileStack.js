@@ -1,6 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 
 import ProfileScreen from '../screens/Profile';
+import screens from '../resources/screens';
 
 const Stack = createStackNavigator();
 
@@ -17,7 +18,7 @@ export default function ProfileStack(props) {
         headerShown: false
       }}
     >
-      <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Stack.Screen name={screens.SCREEN.PROFILE} component={ProfileScreen} />
     </Stack.Navigator>
   );
 }

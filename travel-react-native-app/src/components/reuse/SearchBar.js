@@ -1,13 +1,15 @@
-import { Input, VStack, Heading, Icon, Pressable, HStack } from 'native-base';
+import { VStack, Icon, Pressable, HStack } from 'native-base';
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Ionicons, FontAwesome } from 'react-native-vector-icons';
 
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateRange from '../modal/DateRange';
+
 import BaseButton from '../base/BaseButton';
 import BaseInput from '../base/BaseInput';
 import { useNavigation } from '@react-navigation/native';
 import screens from '../../resources/screens';
+import SelectLocation from '../modal/SelectLocation';
 
 /**
  * Input trong searchBar
@@ -36,37 +38,54 @@ const SearchInput = (props) => {
 
 export default function SearchBar({ style }) {
 
-  const [calendar, setCalender] = useState(false);
-  const [date, setDate] = useState(new Date());
+  const [dateRangeModal, setDateRangeModal] = useState(false);
+  const [locationModal, setLocationModal] = useState(false);
+
+  const [selectedRange, setRange] = useState(null);
+  
+  const [location, setLocation] = useState(null);
 
   const navigation = useNavigation();
 
-  const showCalender = () => {
-    setCalender(true);
+  const showDateRange = () => {
+    setDateRangeModal(true);
   }
 
-  const onChangeDate = (e, value) => {
-    setCalender(false);
-    setDate(value);
+  const showSelectLocation = () => {
+    setLocationModal(true);
   }
 
   return (
     <VStack style={style} space={2} alignSelf="center">
-      <SearchInput
-        leftIcon={<Ionicons name="search-outline" />}
-      />
-      <Pressable onPress={showCalender}>
+      <Pressable onPress={showSelectLocation}>
         <SearchInput
-          value={date.toLocaleString()}
+          editable={false}
+          value={location}
+          leftIcon={<Ionicons name="search-outline" />}
+        />
+      </Pressable>
+      <Pressable onPress={showDateRange}>
+        <SearchInput
+          value={!selectedRange ? null : `${selectedRange.firstDate} - ${selectedRange.secondDate}`}
           editable={false}
           leftIcon={<FontAwesome name="calendar-o" />}
         /></Pressable>
       <SearchInput
+        keyboardType={'numeric'}
         leftIcon={<Ionicons name="people-outline" />}
       />
-      {calendar && <DateTimePicker onChange={onChangeDate} value={date} />}
+      <DateRange 
+        visible={dateRangeModal} 
+        setVisible={setDateRangeModal} 
+        setRange={(dateRange) => setRange(dateRange)} />
+      <SelectLocation 
+        onSelect={(location) => setLocation(location.location_name)} 
+        visible={locationModal} 
+        setVisible={(visible) => setLocationModal(visible)}
+      ></SelectLocation>
+      
       <HStack alignSelf="center">
-        <BaseButton onPress={() => navigation.navigate(screens.STACKS.HOME, { screen: screens.SCREEN.SEARCH})} mt={1} width="40%" backgroundColor={global.theme.COLORS.PRIMARY}>Tìm kiếm</BaseButton>
+        <BaseButton onPress={() => navigation.navigate(screens.STACKS.HOME, { screen: screens.SCREEN.SEARCH })} mt={1} width="40%" backgroundColor={global.theme.COLORS.PRIMARY}>Tìm kiếm</BaseButton>
       </HStack>
     </VStack>
   )

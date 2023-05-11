@@ -31,12 +31,12 @@ export default function ResortScreen({ route, navigation }) {
             <Heading lineHeight={24} fontWeight={600} fontSize={20}>{item.title}</Heading>
             <HStack paddingTop={1} alignItems={"center"}>
               <Icon as={Ionicons} name={"location-sharp"} size={18} color={global.theme.COLORS.PRIMARY} />
-              <Text fontSize={15} color={global.theme.COLORS.LIGHTGRAY} fontWeight={600}>{item.location}</Text>
+              <Text fontSize={15} color={global.theme.COLORS.GRAY} fontWeight={600}>{item.location}</Text>
             </HStack>
           </VStack>
           <Divider _light={{ bg: global.theme.COLORS.BORDER }} />
           <Box paddingX={4} paddingY={2}>
-            <Text color={global.theme.COLORS.LIGHTGRAY} >{item.description}</Text>
+            <Text color={global.theme.COLORS.GRAY} >{item.description}</Text>
             <Box marginTop={2}>
               <Text fontWeight={600} fontSize={18} textTransform={"uppercase"}>Dịch vụ</Text>
               <ScrollView horizontal={true} marginTop={1}>

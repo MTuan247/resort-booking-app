@@ -6,7 +6,7 @@ import { Icon } from 'native-base';
 
 export default function HomeSuggestion({ navigation }) {
   return (
-    <Box position='relative' height={320} borderRadius={25} backgroundColor={global.theme.COLORS.GRAY} style={styles.suggestions}>
+    <Box position='relative' height={320} borderRadius={25} backgroundColor={global.theme.COLORS.LIGHTGRAY} style={styles.suggestions}>
       <Image margin={4} source={{
         uri: "https://firebasestorage.googleapis.com/v0/b/travel-web-app-6fd3b.appspot.com/o/images%2F12de4890-b4d3-11ed-9c5f-b94700cd92b3%2F1676556753961-872309572.jpg?alt=media"
       }} borderRadius={25} alt="Alternate Text" style={styles.cover} resizeMode="cover" height='200' />

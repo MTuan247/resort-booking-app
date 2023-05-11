@@ -11,6 +11,7 @@ const screens = {
     FAVORITE: 'FavoriteScreen',
     ORDER: 'OrderScreen',
     RESORT: 'ResortScreen',
+    PROFILE: 'ProfileScreen',
   }
 }
 
