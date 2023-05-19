@@ -9,7 +9,8 @@ import { useCallback } from 'react';
 import './src/resources/theme'
 import Navigation from './src/navigation'
 import { navigationTheme, nativeBaseTheme } from './src/resources/theme';
-
+import { Provider } from 'react-redux';
+import { store } from './src/redux/store';
 export default function App() {
 
   /**
@@ -35,11 +36,13 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer theme={navigationTheme}>
-      <NativeBaseProvider theme={nativeBaseTheme}>
-        <Navigation />
-      </NativeBaseProvider>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer theme={navigationTheme}>
+        <NativeBaseProvider theme={nativeBaseTheme}>
+          <Navigation />
+        </NativeBaseProvider>
+      </NavigationContainer>
+    </Provider>
   );
 }
 

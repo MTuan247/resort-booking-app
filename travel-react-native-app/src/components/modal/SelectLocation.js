@@ -1,16 +1,40 @@
 import { Box, Center, Modal, HStack, Icon, Divider, VStack, ScrollView, Heading } from 'native-base';
 import { Pressable, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Ionicons, FontAwesome } from 'react-native-vector-icons';
 import BaseInput from '../base/BaseInput';
+import locationApi from '../../common/api/location';
 
 export default function SelectLocation({ visible, setVisible, onSelect }) {
 
-  const locations = [{
-    location_id: 1,
-    location_name: 'Phú Quốc'
-  }];
+  const [locations, setLocation] = useState([]);
+  const [search, setSearch] = useState([]);
 
+  useEffect(() => {
+    load();
+  }, []);
+
+  /**
+   * Load dữ liệu
+   */
+  const load = async (name) => {
+    locationApi.search({ location_name: name }).then(res => {
+      setLocation(res.data);
+    });
+  }
+
+  /**
+   * Xử lý tìm kiếm
+   * @param {*} text 
+   */
+  const handleSearch = (text) => {
+    load(text);
+  }
+
+  /**
+   * Chọn địa điểm
+   * @param {*} location 
+   */
   const selectLocation = (location) => {
     onSelect(location);
     setVisible(false);
@@ -34,6 +58,9 @@ export default function SelectLocation({ visible, setVisible, onSelect }) {
                 }
                 marginLeft={2} placeholder="Nhập địa điểm" flex={1}
                 fontSize={16}
+                value={search}
+                onChangeText={(text) => {setSearch(text)}}
+                onSubmitEditing={(e) => {handleSearch(e.nativeEvent?.text)}}
               ></BaseInput>
             </HStack>
             <Divider></Divider>

@@ -1,15 +1,16 @@
 import { VStack, Icon, Pressable, HStack } from 'native-base';
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux'
 import { StyleSheet } from 'react-native';
 import { Ionicons, FontAwesome } from 'react-native-vector-icons';
 
 import DateRange from '../modal/DateRange';
-
 import BaseButton from '../base/BaseButton';
 import BaseInput from '../base/BaseInput';
 import { useNavigation } from '@react-navigation/native';
 import screens from '../../resources/screens';
 import SelectLocation from '../modal/SelectLocation';
+import { saveSearch } from '../../redux/reducer/searchReducer.js'
 
 /**
  * Input trong searchBar
@@ -38,12 +39,15 @@ const SearchInput = (props) => {
 
 export default function SearchBar({ style }) {
 
+  const searchState = useSelector((state) => state.search);
+  const dispatch = useDispatch();
+
   const [dateRangeModal, setDateRangeModal] = useState(false);
   const [locationModal, setLocationModal] = useState(false);
 
-  const [selectedRange, setRange] = useState(null);
-  
-  const [location, setLocation] = useState(null);
+  const [selectedRange, setRange] = useState(searchState.dateRange);
+  const [location, setLocation] = useState(searchState.location);
+  const [numberOfPeople, setNumberOfPeople] = useState(searchState.numberOfPeople);
 
   const navigation = useNavigation();
 
@@ -53,6 +57,15 @@ export default function SearchBar({ style }) {
 
   const showSelectLocation = () => {
     setLocationModal(true);
+  }
+
+  const handleSearch = () => {
+    dispatch(saveSearch({
+      dateRange: selectedRange,
+      location: location,
+      numberOfPeople: numberOfPeople
+    }));
+    navigation.navigate(screens.STACKS.HOME, { screen: screens.SCREEN.SEARCH });
   }
 
   return (
@@ -72,20 +85,30 @@ export default function SearchBar({ style }) {
         /></Pressable>
       <SearchInput
         keyboardType={'numeric'}
+        value={numberOfPeople}
+        onChangeText={(number) => setNumberOfPeople(number)}
         leftIcon={<Ionicons name="people-outline" />}
       />
-      <DateRange 
-        visible={dateRangeModal} 
-        setVisible={setDateRangeModal} 
+      <DateRange
+        visible={dateRangeModal}
+        setVisible={setDateRangeModal}
         setRange={(dateRange) => setRange(dateRange)} />
-      <SelectLocation 
-        onSelect={(location) => setLocation(location.location_name)} 
-        visible={locationModal} 
+      {
+        locationModal && 
+        <SelectLocation
+          onSelect={(location) => setLocation(location.location_name)}
+          visible={locationModal}
+          setVisible={(visible) => setLocationModal(visible)}
+        />
+      }
+      <SelectLocation
+        onSelect={(location) => setLocation(location.location_name)}
+        visible={locationModal}
         setVisible={(visible) => setLocationModal(visible)}
-      ></SelectLocation>
-      
+      />
+
       <HStack alignSelf="center">
-        <BaseButton onPress={() => navigation.navigate(screens.STACKS.HOME, { screen: screens.SCREEN.SEARCH })} mt={1} width="40%" backgroundColor={global.theme.COLORS.PRIMARY}>Tìm kiếm</BaseButton>
+        <BaseButton onPress={() => handleSearch()} mt={1} width="40%" backgroundColor={global.theme.COLORS.PRIMARY}>Tìm kiếm</BaseButton>
       </HStack>
     </VStack>
   )

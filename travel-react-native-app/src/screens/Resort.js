@@ -1,19 +1,34 @@
 import { Avatar, Box, Pressable, Divider, HStack, Heading, Image, ScrollView, Text, VStack, ZStack } from 'native-base';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Icon } from 'native-base';
 import { Ionicons } from 'react-native-vector-icons';
 import { Dimensions } from 'react-native';
 import BaseButton from '../components/base/BaseButton';
 
+import resortApi from '../common/api/resort';
+
 const windowHeight = Dimensions.get('window').height;
 
 export default function ResortScreen({ route, navigation }) {
 
-  const { item } = route.params;
+  const [item, setItem] = useState({ });
 
-  const services = [{ id: 1 }, { id: 2 }, { id: 3 },]
+  const param = route.params;
 
+  useEffect(() => {
+    load(param.item.resort_id);
+  }, []);
+
+  /**
+   * Load dữ liệu
+   */
+  const load = async (id) => {
+    resortApi.get(id).then(res => {
+      setItem(res.data);
+    });
+  }
+  
   const showImageList = () => {
     navigation.navigate("ImageScreen")
   }
@@ -41,12 +56,12 @@ export default function ResortScreen({ route, navigation }) {
               <Text fontWeight={600} fontSize={18} textTransform={"uppercase"}>Dịch vụ</Text>
               <ScrollView horizontal={true} marginTop={1}>
                 {
-                  services.map(service => {
+                  item.articles && item.articles.map(article => {
                     return (
-                      <Pressable onPress={() => showImageList()} key={service.id} >
+                      <Pressable onPress={() => showImageList()} key={article.article_id} >
                         <VStack marginRight={2} alignItems="center">
-                          <Avatar source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/travel-web-app-6fd3b.appspot.com/o/images%2F12de4890-b4d3-11ed-9c5f-b94700cd92b3%2F1676622606220-439554109.jpg?alt=media' }}></Avatar>
-                          <Text>Bể bơi đá</Text>
+                          <Avatar source={{ uri: article.image }}></Avatar>
+                          <Text>{article.title}</Text>
                         </VStack>
                       </Pressable>
                     )

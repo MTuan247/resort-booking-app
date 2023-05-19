@@ -1,8 +1,6 @@
-import { Box, Center, HStack, Heading, Image, Pressable, Text, VStack } from 'native-base';
+import { Box, HStack, Heading, Image, Pressable, Text, VStack } from 'native-base';
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { FontAwesome } from 'react-native-vector-icons';
-import { Icon } from 'native-base';
 
 export default function SearchCard(props) {
   return (
@@ -12,8 +10,8 @@ export default function SearchCard(props) {
           uri: props.image
         }} alt={props.title}></Image>
         <VStack pl={2} flex={8}>
-          <Heading noOfLines={2} fontWeight={600}>{props.title}</Heading>
-          <Text>{props.location}</Text>
+          <Heading fontSize={18} noOfLines={2} fontWeight={600}>{props.title}</Heading>
+          <Text>{props.address}</Text>
           <Box justifyContent="flex-end" flex={1}>
             <Text fontWeight={500} fontSize={18} textAlign="right">{props.price}</Text>
           </Box>
