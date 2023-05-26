@@ -1,11 +1,11 @@
 import { Box, ScrollView } from 'native-base';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux'
 
 import SearchCard from '../components/reuse/SearchCard';
 import screens from '../resources/screens';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import resortApi from '../common/api/resort';
 
 export default function SearchScreen() {
@@ -14,9 +14,12 @@ export default function SearchScreen() {
 
   const [items, setItems] = useState([]);
 
-  useEffect(() => {
-    load();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      load();
+      return;
+    }, [])
+  );
 
   let item = [
     {
@@ -34,7 +37,6 @@ export default function SearchScreen() {
    */
   const load = async () => {
     resortApi.search(searchState).then(res => {
-      res.data = res.data.concat(item)
       setItems(res.data);
     });
   }

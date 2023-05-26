@@ -17,6 +17,7 @@ const theme = {
     TEXT: '#37CAEC',
     EMERALD: '#18C0C1',
     BLUE: '#1254BB',
+    RED: '#f00',
   },
   FONTS: {
     PRIMARY: 'Poppins',

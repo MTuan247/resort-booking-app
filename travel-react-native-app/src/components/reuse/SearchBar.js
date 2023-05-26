@@ -101,11 +101,6 @@ export default function SearchBar({ style }) {
           setVisible={(visible) => setLocationModal(visible)}
         />
       }
-      <SelectLocation
-        onSelect={(location) => setLocation(location.location_name)}
-        visible={locationModal}
-        setVisible={(visible) => setLocationModal(visible)}
-      />
 
       <HStack alignSelf="center">
         <BaseButton onPress={() => handleSearch()} mt={1} width="40%" backgroundColor={global.theme.COLORS.PRIMARY}>Tìm kiếm</BaseButton>

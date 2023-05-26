@@ -93,13 +93,17 @@ class ResortController extends BaseController {
   }
 
   // Search
-  search(req, res) {
-    var title = req.body.title;
-    var province_name = req.body.province_name;
-    var district_name = req.body.district_name;
-    var dateRange = req.body.dateRange;
-    var location = req.body.location;
-    var numberOfPeople = req.body.numberOfPeople;
+  async search(req, res) {
+    let title = req.body.title;
+    let province_name = req.body.province_name;
+    let district_name = req.body.district_name;
+    let dateRange = req.body.dateRange;
+    let location = req.body.location;
+    let numberOfPeople = req.body.numberOfPeople;
+
+    let from_date = dateRange?.from_date;
+    let to_date = dateRange?.to_date;
+
 
     let where = {
       parent_id: {
@@ -119,41 +123,56 @@ class ResortController extends BaseController {
       }
     }
 
-    this.Model.findAll({
-      where: where
-    })
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving Models."
-        });
+    try {
+      // Tìm các lịch bị trùng
+      let scheduleQuery = `SELECT * FROM schedules s 
+          WHERE (:from_date BETWEEN s.from_date AND s.to_date) 
+          OR (:to_date BETWEEN s.from_date AND s.to_date)
+          OR (:from_date < s.from_date AND :to_date > s.to_date);`;
+
+      let schedules = await db.sequelize.query(scheduleQuery, {
+        replacements: {from_date: from_date, to_date: to_date},
+        type: db.sequelize.QueryTypes.SELECT
       });
+
+      // Nếu có lịch trùng thì loại bỏ resort đó đi
+      if (schedules.length) {
+        let ids = schedules.map(schedule => schedule.resort_id);
+        where.resort_id = {
+          [Op.notIn]: ids
+        }
+      }
+
+      // Lấy danh sách resort bỏ qua các resort bị trùng lịch
+      let resorts = await this.Model.findAll({
+        where: where,
+      });
+
+      res.send(resorts);
+
+    } catch (err) {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Models."
+      });
+    }
   }
 
   // Lấy danh sách yêu thích
   favourite(req, res) {
-    let context = req.body.context;
+    let context = req.context;
 
     if (!context) {
       res.status(401).send({
         message: "Yêu cầu đăng nhập"
       });
+      return;
     }
 
     var user_id = context.user_id;
 
-    let where = {
-      parent_id: {
-        [Op.is]: null
-      }
-    };
-
-    this.Model.findAll({
-      where: where
-    })
+    db.sequelize.query(`SELECT r.* FROM resorts r INNER JOIN favourites f ON r.resort_id = f.resort_id WHERE f.user_id = ?`, 
+      { replacements: [user_id], type: db.sequelize.QueryTypes.SELECT })
       .then(data => {
         res.send(data);
       })
@@ -167,17 +186,51 @@ class ResortController extends BaseController {
 
   // Yêu thích
   like(req, res) {
-    let context = req.body.context;
+    let context = req.context;
 
     if (!context) {
       res.status(401).send({
         message: "Yêu cầu đăng nhập"
       });
+      return;
     }
-  
-    var user_id = context.user_id;
 
-    this.Model.findAll()
+    var user_id = context.user_id;
+    let resort_id = req.body.resort_id;
+
+    db.favourites.create({
+      user_id: user_id,
+      resort_id: resort_id
+    }).then((data) => {
+      res.send(data);
+    }).catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Models."
+      });
+    })
+  }
+
+  // Lấy danh sách đã đặt
+  order(req, res) {
+    let context = req.context;
+
+    if (!context) {
+      res.status(401).send({
+        message: "Yêu cầu đăng nhập"
+      });
+      return;
+    }
+
+    let where = {
+      parent_id: {
+        [Op.is]: null
+      }
+    };
+
+    this.Model.findAll({
+      where: where
+    })
       .then(data => {
         res.send(data);
       })

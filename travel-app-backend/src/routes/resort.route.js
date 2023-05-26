@@ -18,6 +18,13 @@ module.exports = app => {
   router.post("/list", resorts.findAll.bind(resorts));
   router.post("/search", resorts.search.bind(resorts));
 
+  // Xử lý yêu thích
+  router.post("/favourite", resorts.favourite.bind(resorts));
+  router.post("/like", resorts.like.bind(resorts));
+
+  // Xử lý đặt hàng
+  router.post("/order", resorts.order.bind(resorts));
+
   // Retrieve a single resort with id
   router.get("/:id", resorts.findOne.bind(resorts));
 

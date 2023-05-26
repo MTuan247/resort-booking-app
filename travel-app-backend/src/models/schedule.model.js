@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
-  const Article = sequelize.define("article", {
-    article_id: {
+  const schedule = sequelize.define("schedule", {
+    schedule_id: {
       type: Sequelize.UUID,
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true
@@ -9,16 +9,13 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.UUID,
       defaultValue: Sequelize.UUIDV4,
     },
-    title: {
-      type: Sequelize.STRING
+    from_date: {
+      type: Sequelize.DATE,
     },
-    description: {
-      type: Sequelize.TEXT('long')
-    },
-    image: {
-      type: Sequelize.STRING
+    to_date: {
+      type: Sequelize.DATE,
     },
   });
 
-  return Article;
+  return schedule;
 };

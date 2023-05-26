@@ -1,5 +1,5 @@
-import axios from "axios";
 import { API_URL } from '../../config/api.js';
+import { httpRequest } from "./httpRequest.js";
 
 const apiUrl = API_URL;
 
@@ -12,23 +12,23 @@ export default class BaseApi {
   }
 
   /**
-   * Gọi hàm get axios
+   * Gọi hàm get httpRequest
    * @returns 
    */
   async get() {
     const url = this.api();
 
-    return await axios.get(url);
+    return await httpRequest.get(url);
   }
 
   /**
-   * Gọi hàm get axios
+   * Gọi hàm get httpRequest
    * @returns 
    */
   async get(id) {
     const url = this.api() + `/${id}`;
 
-    return await axios.get(url);
+    return await httpRequest.get(url);
   }
 
   /**
@@ -38,7 +38,7 @@ export default class BaseApi {
   async list(payload) {
     const url = this.api() + '/list';
 
-    return await axios.post(url, payload);
+    return await httpRequest.post(url, payload);
   }
 
 }

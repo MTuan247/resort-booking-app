@@ -12,6 +12,7 @@ const screens = {
     ORDER: 'OrderScreen',
     RESORT: 'ResortScreen',
     PROFILE: 'ProfileScreen',
+    LOGIN: 'LoginScreen',
   }
 }
 

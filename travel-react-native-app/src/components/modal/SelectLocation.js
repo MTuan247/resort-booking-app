@@ -12,6 +12,7 @@ export default function SelectLocation({ visible, setVisible, onSelect }) {
 
   useEffect(() => {
     load();
+    return;
   }, []);
 
   /**
