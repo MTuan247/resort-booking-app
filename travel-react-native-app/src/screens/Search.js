@@ -7,10 +7,14 @@ import SearchCard from '../components/reuse/SearchCard';
 import screens from '../resources/screens';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import resortApi from '../common/api/resort';
+import SearchBar from '../components/reuse/SearchBar';
+import { setShowSearch } from '../redux/reducer/searchReducer.js';
 
 export default function SearchScreen() {
 
   const searchState = useSelector((state) => state.search);
+
+  const dispatch = useDispatch();
 
   const [items, setItems] = useState([]);
 
@@ -18,7 +22,7 @@ export default function SearchScreen() {
     useCallback(() => {
       load();
       return;
-    }, [])
+    }, [searchState.dateRange, searchState.location, searchState.numberOfPeople])
   );
 
   let item = [
@@ -49,6 +53,9 @@ export default function SearchScreen() {
 
   return (
     <Box style={styles.container}>
+      {
+        searchState.showOnSearch && <SearchBar />
+      }
       <ScrollView>
         {
           items.map(item => {

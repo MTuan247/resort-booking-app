@@ -47,7 +47,7 @@ export default function SelectLocation({ visible, setVisible, onSelect }) {
         <Modal.Content flex={1}>
           <Modal.Body>
             <HStack marginBottom={4}>
-              <Pressable onPress={() => setVisible(false)}>
+              <Pressable onPress={() => selectLocation({})}>
                 <Icon as={Ionicons} size={10} name='close-outline'></Icon>
               </Pressable>
               <BaseInput

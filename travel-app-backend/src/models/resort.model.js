@@ -38,6 +38,15 @@ module.exports = (sequelize, Sequelize) => {
     to_cost: {
       type: Sequelize.DECIMAL(22, 4)
     },
+    type: {
+      type: Sequelize.INTEGER
+    },
+    min_people: {
+      type: Sequelize.INTEGER
+    },
+    max_people: {
+      type: Sequelize.INTEGER
+    },
   });
 
   return Resort;

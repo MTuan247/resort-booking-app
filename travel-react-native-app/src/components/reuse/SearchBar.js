@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import screens from '../../resources/screens';
 import SelectLocation from '../modal/SelectLocation';
 import { saveSearch } from '../../redux/reducer/searchReducer.js'
+import { formatDate } from '../../common/function/format';
 
 /**
  * Input trong searchBar
@@ -51,14 +52,23 @@ export default function SearchBar({ style }) {
 
   const navigation = useNavigation();
 
+  /**
+   * Mở form chọn ngày tháng
+   */
   const showDateRange = () => {
     setDateRangeModal(true);
   }
 
+  /**
+   * Mở form chọn địa điểm
+   */
   const showSelectLocation = () => {
     setLocationModal(true);
   }
 
+  /**
+   * press tìm kiếm
+   */
   const handleSearch = () => {
     dispatch(saveSearch({
       dateRange: selectedRange,
@@ -68,8 +78,25 @@ export default function SearchBar({ style }) {
     navigation.navigate(screens.STACKS.HOME, { screen: screens.SCREEN.SEARCH });
   }
 
+  /**
+   * format lại daterange
+   * @returns *
+   */
+  const dateSearch = () => {
+    if (!selectedRange) {
+      return null;
+    }
+
+    let result = formatDate(selectedRange.firstDate);
+
+    if (selectedRange.secondDate) {
+      result += ` - ${formatDate(selectedRange.secondDate)}`;
+    }
+    return result;
+  }
+
   return (
-    <VStack style={style} space={2} alignSelf="center">
+    <VStack marginX={4} marginY={4} style={style} space={2} alignSelf="center">
       <Pressable onPress={showSelectLocation}>
         <SearchInput
           editable={false}
@@ -79,7 +106,7 @@ export default function SearchBar({ style }) {
       </Pressable>
       <Pressable onPress={showDateRange}>
         <SearchInput
-          value={!selectedRange ? null : `${selectedRange.firstDate} - ${selectedRange.secondDate}`}
+          value={dateSearch()}
           editable={false}
           leftIcon={<FontAwesome name="calendar-o" />}
         /></Pressable>

@@ -22,6 +22,7 @@ export default function BookingStack(props) {
     <Stack.Navigator
       screenOptions={{
         mode: 'card',
+        headerTintColor: global.theme.COLORS.BLACK,
         headerTitleAlign: 'center'
       }}
     >

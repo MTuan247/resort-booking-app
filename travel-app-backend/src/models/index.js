@@ -26,6 +26,8 @@ db.images = require("./image.model.js")(sequelize, Sequelize);
 db.locations = require("./location.model.js")(sequelize, Sequelize);
 db.favourites = require("./favourite.model.js")(sequelize, Sequelize);
 db.schedules = require("./schedule.model.js")(sequelize, Sequelize);
+db.orders = require("./order.model.js")(sequelize, Sequelize);
+db.roles = require("./role.model.js")(sequelize, Sequelize);
 
 // Config associations
 db.resorts.hasMany(db.articles, {
@@ -60,5 +62,9 @@ db.images.belongsTo(db.articles, {
 
 db.users.belongsToMany(db.resorts, { through: db.favourites, foreignKey: "user_id", });
 db.resorts.belongsToMany(db.users, { through: db.favourites, foreignKey: "resort_id" });
+
+
+db.users.belongsToMany(db.resorts, { through: db.orders, foreignKey: "user_id", });
+db.resorts.belongsToMany(db.users, { through: db.orders, foreignKey: "resort_id" });
 
 module.exports = db;

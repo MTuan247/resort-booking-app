@@ -5,6 +5,7 @@ import { StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import screens from '../resources/screens';
 import { logout } from '../redux/reducer/contextReducer';
+import assets from '../resources/assets';
 
 export default function ProfileScreen({ navigation }) {
 
@@ -23,9 +24,9 @@ export default function ProfileScreen({ navigation }) {
   return (
     <Box style={styles.container}>
       <HStack marginX={2}>
-        <Avatar size={75} source={{
-          uri: context.user?.avatar || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
-        }}>
+        <Avatar background={global.theme.COLORS.CARD} size={75} source={context.user?.avatar ? {
+          uri: context.user?.avatar
+        } : assets.IMAGE.ANONYMOUS}>
         </Avatar>
         <VStack justifyContent={"space-between"} marginLeft={4}>
           {

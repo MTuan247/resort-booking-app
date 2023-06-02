@@ -24,7 +24,7 @@ export default function DateRange({ selectedRange, setRange, visible, setVisible
               }}
               onConfirm={() => setVisible(false)}
               blockSingleDateSelection={true}
-              responseFormat="DD/MM/YYYY"
+              responseFormat="YYYY-MM-DD"
               minDate={moment()}
               ln="en"
               selectedDateContainerStyle={styles.selectedDateContainerStyle}

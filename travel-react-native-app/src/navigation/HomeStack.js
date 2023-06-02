@@ -3,7 +3,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../screens/Home';
 import screens from '../resources/screens';
 import SearchScreen from '../screens/Search';
-import ResortScreen from '../screens/Resort';
+import { Icon, Pressable } from 'native-base';
+import { Ionicons } from 'react-native-vector-icons';
+import { useDispatch, useSelector } from 'react-redux'
+import { toggleSearch } from '../redux/reducer/searchReducer.js'
 
 const Stack = createStackNavigator();
 
@@ -29,20 +32,37 @@ const homeOptions = {
  * Config cho trang Tìm kiếm
  */
 const searchOptions = {
-  headerTitle: 'Tìm kiếm'
+  headerTitle: 'Tìm kiếm',
+  headerTitleAlign: 'center',
+  headerRight: (props) => <SearchButton />,
 }
 
 /**
- * Config cho trang chi tiết
+ * 
+ * @returns Nút tìm kiếm
  */
-// const detailOptions = ({ route }) => ({
-//   headerTitle: route.params.item.title,
-//   headerTransparent: true,
-//   headerTintColor: global.theme.COLORS.WHITE,
-//   headerStyle: {
-//     backgroundColor: global.theme.COLORS.DARKGRAY,
-//   },
-// })
+const SearchButton = () => {
+
+  const dispatch = useDispatch();
+
+  const searchState = useSelector((state) => state.search);
+
+  const toggleSearchBar = () => {
+    dispatch(toggleSearch());
+  }
+
+  return (
+    <Pressable onPress={toggleSearchBar}>
+      {
+        searchState.showOnSearch ? (
+          <Icon as={Ionicons} color={global.theme.COLORS.BLACK} marginRight={3} size={8} name='close-outline' />
+        ) : (
+          <Icon as={Ionicons} color={global.theme.COLORS.BLACK} marginRight={3} size={6} name='search-outline' />
+        )
+      }
+    </Pressable>
+  )
+}
 
 /**
  * Stack màn hình
@@ -57,7 +77,6 @@ export default function HomeStack({ navigation, route }) {
     >
       <Stack.Screen options={homeOptions} name={screens.SCREEN.HOME} component={HomeScreen} />
       <Stack.Screen options={searchOptions} name={screens.SCREEN.SEARCH} component={SearchScreen} />
-      {/* <Stack.Screen options={detailOptions} name={screens.SCREEN.RESORT} component={ResortScreen} /> */}
     </Stack.Navigator>
   );
 }

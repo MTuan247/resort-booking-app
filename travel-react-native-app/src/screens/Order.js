@@ -5,8 +5,12 @@ import SearchCard from '../components/reuse/SearchCard';
 import screens from '../resources/screens';
 import { useFocusEffect } from '@react-navigation/native';
 import resortApi from '../common/api/resort';
+import { useSelector, useDispatch } from 'react-redux';
+import RequiredLogin from '../components/reuse/RequiredLogin';
 
 export default function OrderScreen({ navigation }) {
+
+  const context = useSelector((state) => state.context);
 
   const [items, setItems] = useState([]);
 
@@ -15,16 +19,18 @@ export default function OrderScreen({ navigation }) {
    */
   const load = async () => {
     setItems([]);
-    resortApi.order().then(res => {
-      setItems(res.data);
-    });
+    if (context.loggedIn) {
+      resortApi.order().then(res => {
+        setItems(res.data);
+      });
+    }
   }
 
   useFocusEffect(
     useCallback(() => {
       load();
       return;
-    }, [])
+    }, [context.loggedIn])
   );
 
   const pressItem = (item) => {
@@ -33,6 +39,9 @@ export default function OrderScreen({ navigation }) {
 
   return (
     <Box style={styles.container}>
+      {
+        context.loggedIn || <RequiredLogin />
+      }
       <ScrollView>
         {
           items.map(item => {

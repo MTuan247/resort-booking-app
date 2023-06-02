@@ -24,6 +24,7 @@ module.exports = app => {
 
   // Xử lý đặt hàng
   router.post("/order", resorts.order.bind(resorts));
+  router.post("/book", resorts.book.bind(resorts));
 
   // Retrieve a single resort with id
   router.get("/:id", resorts.findOne.bind(resorts));

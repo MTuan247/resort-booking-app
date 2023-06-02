@@ -1,8 +1,15 @@
 import { Box, HStack, Heading, Image, Pressable, Text, VStack } from 'native-base';
 import React from 'react';
 import { StyleSheet } from 'react-native';
+import { formatMoney } from '../../common/function/format';
 
 export default function SearchCard(props) {
+
+  const fromCost = formatMoney(props.from_cost);
+  const toCost = formatMoney(props.to_cost);
+
+  const price = fromCost + (toCost ? ` - ${toCost}` : '');
+
   return (
     <Pressable onPress={typeof props.onPress == 'function' ? () => props.onPress() : () => {}}>
       <HStack marginBottom={4} backgroundColor={global.theme.COLORS.WHITE} paddingX={2} paddingY={4} height={150}>
@@ -13,7 +20,7 @@ export default function SearchCard(props) {
           <Heading fontSize={18} noOfLines={2} fontWeight={600}>{props.title}</Heading>
           <Text>{props.address}</Text>
           <Box justifyContent="flex-end" flex={1}>
-            <Text fontWeight={500} fontSize={18} textAlign="right">{props.price}</Text>
+            <Text color={global.theme.COLORS.PRICE} fontWeight={500} fontSize={16} textAlign="right">{price}</Text>
           </Box>
         </VStack>
       </HStack>

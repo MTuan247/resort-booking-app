@@ -11,6 +11,7 @@ import ProfileStack from './ProfileStack';
 import screens from '../resources/screens';
 
 import ResortScreen from '../screens/Resort';
+import DetailScreen from '../screens/Detail';
 import ImageArticle from '../screens/ImageArticle';
 
 const Stack = createStackNavigator();
@@ -80,14 +81,27 @@ function BottomTab() {
 /**
  * Config cho trang chi tiết
  */
-const detailOptions = ({ route }) => ({
-  headerTitle: route.params.item.title,
+const resortOptions = ({ route }) => ({
+  headerTitle: 'Tìm kiếm',
   headerTransparent: true,
   headerTintColor: global.theme.COLORS.WHITE,
   headerStyle: {
     backgroundColor: global.theme.COLORS.DARKGRAY,
   },
-  headerShown: true
+  headerShown: true,
+});
+
+/**
+ * Config cho trang chi tiết
+ */
+const detailOptions = ({ route }) => ({
+  headerTitle: route.params.title,
+  headerTransparent: true,
+  headerTintColor: global.theme.COLORS.WHITE,
+  headerStyle: {
+    backgroundColor: global.theme.COLORS.DARKGRAY,
+  },
+  headerShown: true,
 })
 
 
@@ -105,8 +119,9 @@ export default function Navigation(props) {
       }}
     >
       <Stack.Screen name="App" component={BottomTab} />
-      <Stack.Screen name="ImageScreen" component={ImageArticle} />
-      <Stack.Screen options={detailOptions} name={screens.SCREEN.RESORT} component={ResortScreen} />
+      <Stack.Screen name={screens.SCREEN.IMAGE} component={ImageArticle} />
+      <Stack.Screen options={resortOptions} name={screens.SCREEN.RESORT} component={ResortScreen} />
+      <Stack.Screen options={detailOptions} name={screens.SCREEN.DETAIL} component={DetailScreen} />
     </Stack.Navigator>
   );
 }

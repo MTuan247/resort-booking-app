@@ -13,6 +13,8 @@ const screens = {
     RESORT: 'ResortScreen',
     PROFILE: 'ProfileScreen',
     LOGIN: 'LoginScreen',
+    DETAIL: 'DetailScreen',
+    IMAGE: 'ImageScreen',
   }
 }
 
