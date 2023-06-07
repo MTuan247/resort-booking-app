@@ -52,7 +52,7 @@ export default function ProfileScreen({ navigation }) {
       </HStack>
 
       <HStack marginTop={8} justifyContent={"space-evenly"}>
-        <Pressable>
+        <Pressable onPress={() => navigation.navigate(screens.STACKS.ARCHIVE)}>
           <VStack alignItems={"center"}>
             <Icon as={Ionicons} name={"heart-outline"} size={30} color={global.theme.COLORS.BLACK} />
             <Text>Yêu thích</Text>
@@ -63,10 +63,13 @@ export default function ProfileScreen({ navigation }) {
           <Icon as={Ionicons} name={"notifications-outline"} size={30} color={global.theme.COLORS.BLACK} />
           <Text>Thông báo</Text>
         </VStack>
-        <VStack alignItems={"center"}>
-          <Icon as={Ionicons} name={"document-text-outline"} size={30} color={global.theme.COLORS.BLACK} />
-          <Text>Đơn hàng</Text>
-        </VStack>
+
+        <Pressable onPress={() => navigation.navigate(screens.STACKS.BOOKING)}>
+          <VStack alignItems={"center"}>
+            <Icon as={Ionicons} name={"document-text-outline"} size={30} color={global.theme.COLORS.BLACK} />
+            <Text>Đơn hàng</Text>
+          </VStack>
+        </Pressable>
       </HStack>
       <VStack margin={4} padding={2} borderRadius={4} borderWidth={.5} borderColor={global.theme.COLORS.BORDER}>
 
@@ -76,11 +79,13 @@ export default function ProfileScreen({ navigation }) {
         </Pressable>
 
         <Divider height={.1} opacity={0.2} bg={global.theme.COLORS.BORDER}></Divider>
-
-        <Pressable onPress={handleLogout} paddingY={2} flexDirection={"row"} alignItems={'center'}>
-          <Icon marginLeft={2} marginRight={4} as={Ionicons} name={"exit-outline"} size={25} color={global.theme.COLORS.BLACK} />
-          <Text>Đăng xuất</Text>
-        </Pressable>
+        {
+          context.loggedIn && (
+            <Pressable onPress={handleLogout} paddingY={2} flexDirection={"row"} alignItems={'center'}>
+              <Icon marginLeft={2} marginRight={4} as={Ionicons} name={"exit-outline"} size={25} color={global.theme.COLORS.BLACK} />
+              <Text>Đăng xuất</Text>
+            </Pressable>)
+        }
       </VStack>
     </Box>
   )

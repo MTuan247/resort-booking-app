@@ -3,9 +3,9 @@ module.exports = app => {
 
   var router = require("express").Router();
 
-  router.post('/register', authController.register);
+  router.post('/register', authController.register.bind(authController));
 
-  router.post('/login', authController.login);
+  router.post('/login', authController.login.bind(authController));
 
   app.use('/auth', router);
 };

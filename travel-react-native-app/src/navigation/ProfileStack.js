@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import ProfileScreen from '../screens/Profile';
 import LoginScreen from '../screens/Login';
 import screens from '../resources/screens';
+import RegisterScreen from '../screens/Register';
 
 const Stack = createStackNavigator();
 
@@ -12,6 +13,14 @@ const Stack = createStackNavigator();
 const loginOptions = {
   headerShown: true,
   headerTitle: 'Đăng nhập'
+}
+
+/**
+ * option cho register
+ */
+const registerOptions = {
+  headerShown: true,
+  headerTitle: 'Đăng ký'
 }
 
 /**
@@ -31,6 +40,7 @@ export default function ProfileStack(props) {
     >
       <Stack.Screen name={screens.SCREEN.PROFILE} component={ProfileScreen} />
       <Stack.Screen options={loginOptions} name={screens.SCREEN.LOGIN} component={LoginScreen} />
+      <Stack.Screen options={registerOptions} name={screens.SCREEN.REGISTER} component={RegisterScreen} />
     </Stack.Navigator>
   );
 }
