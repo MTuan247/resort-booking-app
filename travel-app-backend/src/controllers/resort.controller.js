@@ -114,8 +114,6 @@ class ResortController extends BaseController {
   // Search
   async search(req, res) {
     let title = req.body.title;
-    let province_name = req.body.province_name;
-    let district_name = req.body.district_name;
     let dateRange = req.body.dateRange;
     let location = req.body.location;
     let numberOfPeople = req.body.numberOfPeople;

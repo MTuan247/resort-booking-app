@@ -60,6 +60,15 @@ db.images.belongsTo(db.articles, {
   foreignKey: 'article_id',
 });
 
+db.roles.hasMany(db.users, {
+  foreignKey: 'role_id',
+  onDelete: 'SET NULL',
+  onUpdate: 'NO ACTION'
+});
+db.users.belongsTo(db.roles, {
+  foreignKey: 'role_id',
+});
+
 db.users.belongsToMany(db.resorts, { through: db.favourites, foreignKey: "user_id", });
 db.resorts.belongsToMany(db.users, { through: db.favourites, foreignKey: "resort_id" });
 

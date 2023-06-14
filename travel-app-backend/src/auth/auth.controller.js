@@ -52,6 +52,8 @@ exports.login = async (req, res) => {
 	const dataForAccessToken = {
 		user_id: user.user_id,
 		user_name: user.user_name,
+		role: user.role,
+		role_id: user.role_id,
 	};
 	const accessToken = await generateToken(
 		dataForAccessToken,

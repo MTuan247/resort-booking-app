@@ -39,7 +39,8 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.DECIMAL(22, 4)
     },
     type: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      defaultValue: 0
     },
     min_people: {
       type: Sequelize.INTEGER

@@ -1,4 +1,4 @@
-const { contextMiddleware } = require('../auth/auth.middleware');
+const { contextMiddleware } = require('./context.middleware');
 const { errorHandlingMiddleware } = require('./error.middleware');
 
 const appMiddleware = (app) => {

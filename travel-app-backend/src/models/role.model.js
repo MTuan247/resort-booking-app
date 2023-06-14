@@ -5,7 +5,10 @@ module.exports = (sequelize, Sequelize) => {
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true
     },
-    role_name: {
+    role: {
+      type: Sequelize.STRING
+    },
+    role_title: {
       type: Sequelize.STRING
     },
   });

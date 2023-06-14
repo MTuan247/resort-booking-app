@@ -1,0 +1,47 @@
+.modal-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 0 1rem;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.25rem;
+    background: #fff;
+    max-height: 95vh;
+    max-width: 80%;
+
+    .modal__title {
+      margin: 0 2rem 0 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .modal__close {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+    }
+
+    .modal__footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .modal__content {
+      padding-top: 8px;
+      padding-bottom: 8px;
+      overflow: auto;
+      flex: 1;
+    }
+
+    .dark-mode div::v-deep(.modal-content) {
+      border-color: #2d3748;
+      background-color: #1a202c;
+    }
+  }
+}

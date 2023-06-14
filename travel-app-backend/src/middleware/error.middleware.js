@@ -1,4 +1,4 @@
-exports.errorHandlingMiddleware = async (req, res, next) => {
+exports.errorHandlingMiddleware = (req, res, next) => {
 	try {
     return next();
   } catch (error) {

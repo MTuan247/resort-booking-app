@@ -1,4 +1,4 @@
-const authMethod = require('./auth.method');
+const authMethod = require('../auth/auth.method');
 
 exports.contextMiddleware = async (req, res, next) => {
 	// Lấy access token từ header

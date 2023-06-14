@@ -1,0 +1,21 @@
+.input-wrapper {
+  
+  .v-combobox--single .v-field--dirty:not(.v-field--focused) input {
+      opacity: 1;
+  }
+}
+
+.b-input.b-input-text {
+  &.has-border {
+    .v-field__input {
+      border: 1px solid var(--border-color);
+      border-radius: 36px;
+    }
+  }
+
+  .v-messages {
+    .v-messages__message {
+      color: var(--red);
+    }
+  }
+}
