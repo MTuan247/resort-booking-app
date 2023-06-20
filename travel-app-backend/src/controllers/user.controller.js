@@ -53,6 +53,14 @@ class UserController extends BaseController {
         res.send(data);
       })
   }
+
+  // Retrieve all Models from the database.
+  findRoles(req, res) {
+    db.roles.findAll({ raw: true })
+      .then(data => {
+        res.send(data);
+      })
+  }
 }
 
 module.exports = new UserController(UserModel);

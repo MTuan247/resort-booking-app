@@ -13,6 +13,7 @@ import screens from '../resources/screens';
 import ResortScreen from '../screens/Resort';
 import DetailScreen from '../screens/Detail';
 import ImageArticle from '../screens/ImageArticle';
+import PaymentScreen from '../screens/Payment';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -73,7 +74,7 @@ function BottomTab() {
         <Tab.Screen name={screens.STACKS.HOME} component={HomeStack} options={tabConfig.Home}/>
         <Tab.Screen name={screens.STACKS.ARCHIVE} component={ArchiveStack} options={tabConfig.Favorite} />
         <Tab.Screen name={screens.STACKS.BOOKING} component={BookingStack} options={tabConfig.Booking} />
-        <Tab.Screen name={screens.STACKS.PROFILE} component={ProfileStack}options={tabConfig.Profile} />
+        <Tab.Screen name={screens.STACKS.PROFILE} component={ProfileStack} options={tabConfig.Profile} />
     </Tab.Navigator>
   )
 }
@@ -104,6 +105,18 @@ const detailOptions = ({ route }) => ({
   headerShown: true,
 })
 
+/**
+ * Config cho trang đặt phòng
+ */
+const paymentOptions = ({ route }) => ({
+  headerTitle: 'Đặt phòng',
+  headerTintColor: global.theme.COLORS.BLACK,
+  headerStyle: {
+  },
+  headerShown: true,
+  headerTitleAlign: 'center'
+})
+
 
 /**
  * Điều hướng
@@ -122,6 +135,7 @@ export default function Navigation(props) {
       <Stack.Screen name={screens.SCREEN.IMAGE} component={ImageArticle} />
       <Stack.Screen options={resortOptions} name={screens.SCREEN.RESORT} component={ResortScreen} />
       <Stack.Screen options={detailOptions} name={screens.SCREEN.DETAIL} component={DetailScreen} />
+      <Stack.Screen options={paymentOptions} name={screens.SCREEN.PAYMENT} component={PaymentScreen} />
     </Stack.Navigator>
   );
 }

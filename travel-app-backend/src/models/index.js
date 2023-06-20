@@ -72,8 +72,25 @@ db.users.belongsTo(db.roles, {
 db.users.belongsToMany(db.resorts, { through: db.favourites, foreignKey: "user_id", });
 db.resorts.belongsToMany(db.users, { through: db.favourites, foreignKey: "resort_id" });
 
+// db.users.hasMany(db.orders, {
+//   foreignKey: 'user_id',
+//   onDelete: 'CASCADE',
+//   onUpdate: 'NO ACTION'
+// });
+// db.orders.belongsTo(db.users, {
+//   foreignKey: 'user_id',
+// });
 
-db.users.belongsToMany(db.resorts, { through: db.orders, foreignKey: "user_id", });
-db.resorts.belongsToMany(db.users, { through: db.orders, foreignKey: "resort_id" });
+// db.resorts.hasMany(db.orders, {
+//   foreignKey: 'resort_id',
+//   onDelete: 'CASCADE',
+//   onUpdate: 'NO ACTION'
+// });
+// db.resorts.belongsTo(db.users, {
+//   foreignKey: 'resort_id',
+// });
+
+// db.users.belongsToMany(db.resorts, { through: db.orders, foreignKey: "user_id", uniqueKey: 'order_id' });
+// db.resorts.belongsToMany(db.users, { through: db.orders, foreignKey: "resort_id", uniqueKey: 'order_id' });
 
 module.exports = db;

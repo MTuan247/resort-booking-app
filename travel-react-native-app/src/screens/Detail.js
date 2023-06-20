@@ -9,6 +9,7 @@ import resortApi from '../common/api/resort';
 import { formatMoney } from '../common/function/format';
 import screens from '../resources/screens';
 import BaseButton from '../components/base/BaseButton';
+import ShowDateRange from '../components/reuse/ShowDateRange';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -36,6 +37,13 @@ export default function DetailScreen({ route, navigation }) {
    */
   const showImageList = () => {
     navigation.navigate(screens.SCREEN.IMAGE, { item: item })
+  }
+
+  /**
+   * Xem danh sách hình ảnh
+   */
+  const showPayment = () => {
+    navigation.navigate(screens.SCREEN.PAYMENT, { resort: param.resort, room: item })
   }
 
   return (
@@ -70,18 +78,35 @@ export default function DetailScreen({ route, navigation }) {
                 }
               </ScrollView>
             </Box>
+            {
+              param.item?.order && (
+                <Box marginTop={4}>
+                  <Text fontWeight={600} fontSize={18} textTransform={"uppercase"}>Thông tin đặt phòng</Text>
+                  <Text fontWeight={500} fontSize={14}>Trạng thái: {param.item.order?.status ? 'Đặt phòng thành công' : 'Đang xử lý'}</Text>
+                  <ShowDateRange firstDate={param.item?.order.from_date}
+                    secondDate={param.item?.order.to_date}></ShowDateRange>
+                </Box>
+              )
+            }
           </Box>
         </ScrollView>
       </Box>
-      <HStack justifyContent={"space-between"} paddingX={6} alignItems={"center"} borderTopRadius={40} height={windowHeight * 0.1} backgroundColor={global.theme.COLORS.DARKGRAY}>
-        <Text fontSize={16} color={theme.COLORS.WHITE}>{formatMoney(item.from_cost)} đ/ngày</Text>
-        <BaseButton paddingLeft={4} paddingRight={4}>
-          <HStack alignItems={"center"}>
-            <Text color={global.theme.COLORS.WHITE}>Đặt ngay</Text>
-            <Icon marginLeft={2} as={Ionicons} name={"arrow-forward"} size={18} color={global.theme.COLORS.WHITE} />
+      {
+        param.item?.order ? (
+          <></>
+        ) : (
+          <HStack justifyContent={"space-between"} paddingX={6} alignItems={"center"} borderTopRadius={40} height={windowHeight * 0.1} backgroundColor={global.theme.COLORS.DARKGRAY}>
+            <Text fontSize={16} color={theme.COLORS.WHITE}>{formatMoney(item.from_cost)} đ/ngày</Text>
+            <BaseButton onPress={() => showPayment()} paddingLeft={4} paddingRight={4}>
+              <HStack alignItems={"center"}>
+                <Text color={global.theme.COLORS.WHITE}>Đặt ngay</Text>
+                <Icon marginLeft={2} as={Ionicons} name={"arrow-forward"} size={18} color={global.theme.COLORS.WHITE} />
+              </HStack>
+            </BaseButton>
           </HStack>
-        </BaseButton>
-      </HStack>
+        )
+      }
+
     </>
   )
 }

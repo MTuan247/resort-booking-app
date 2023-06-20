@@ -32,7 +32,7 @@ export default function ProfileScreen({ navigation }) {
           {
             context.loggedIn ? (
               <>
-                <Heading fontWeight={600} fontSize={20}>Nguyen Minh Tuan</Heading>
+                <Heading fontWeight={600} fontSize={20}>{context.user?.name || context.user?.user_name}</Heading>
                 <Box alignSelf={"flex-start"} borderTopLeftRadius={8} borderBottomRightRadius={8} backgroundColor={global.theme.COLORS.DARKGRAY}>
                   <Text paddingX={4} color={global.theme.COLORS.WHITE} fontSize={16}>Thành viên</Text>
                 </Box>

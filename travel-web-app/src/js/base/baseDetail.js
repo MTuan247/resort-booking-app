@@ -36,6 +36,14 @@ export default {
         });
       }
 
+      this.afterOpen();
+    },
+
+    /**
+     * Sau khi mở form
+     */
+    afterOpen() {
+
     },
 
     /**

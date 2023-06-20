@@ -7,6 +7,7 @@ import { login } from '../redux/reducer/contextReducer';
 import screens from '../resources/screens';
 import { useNavigation } from '@react-navigation/native';
 import authApi from '../common/api/auth';
+import { validateEmail, validatePhone } from '../common/function/validate';
 
 export default function RegisterScreen() {
 
@@ -15,6 +16,9 @@ export default function RegisterScreen() {
   const navigation = useNavigation();
 
   const [userName, setUserName] = useState(null);
+  const [name, setName] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [tel, setTel] = useState(null);
   const [password, setPassword] = useState(null);
   const [rewritePassword, setRewritePassword] = useState(null);
 
@@ -23,6 +27,31 @@ export default function RegisterScreen() {
   const handleRegister = async () => {
     if (!userName) {
       setError('Tên tài khoản không được để trống');
+      return;
+    }
+
+    if (!name) {
+      setError('Họ và tên không được để trống.');
+      return;
+    }
+
+    if (!email) {
+      setError('Email không được để trống.');
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setError('Email không đúng định dạng.');
+      return;
+    }
+
+    if (!tel) {
+      setError('Số điện thoại không được để trống.');
+      return;
+    }
+
+    if (!validatePhone(tel)) {
+      setError('Số điện thoại không đúng định dạng.');
       return;
     }
 
@@ -44,7 +73,10 @@ export default function RegisterScreen() {
     try {
       let user = {
         user_name: userName,
-        password: password
+        password: password,
+        name: name,
+        email: email,
+        tel: tel
       }
       await authApi.register(user);
       navigation.navigate(screens.SCREEN.LOGIN);
@@ -57,6 +89,9 @@ export default function RegisterScreen() {
     <Box style={styles.container}>
       <Text textAlign={"center"} marginBottom={4}></Text>
       <Input value={userName} onChangeText={text => setUserName(text)} borderRadius={8} marginBottom={2} placeholder="Nhập tài khoản"></Input>
+      <Input value={name} onChangeText={text => setName(text)} borderRadius={8} marginBottom={2} placeholder="Họ và tên"></Input>
+      <Input value={email} onChangeText={text => setEmail(text)} borderRadius={8} marginBottom={2} placeholder="Email"></Input>
+      <Input keyboardType='numeric' value={tel} onChangeText={text => setTel(text)} borderRadius={8} marginBottom={2} placeholder="Số điện thoại"></Input>
       <Input value={password} onChangeText={text => setPassword(text)} secureTextEntry={true} borderRadius={8} marginBottom={2} placeholder="Mật khẩu"></Input>
       <Input value={rewritePassword} onChangeText={text => setRewritePassword(text)} secureTextEntry={true} borderRadius={8} marginBottom={4} placeholder="Nhập lại mật khẩu"></Input>
       {

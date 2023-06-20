@@ -16,6 +16,7 @@ const screens = {
     REGISTER: 'RegisterScreen',
     DETAIL: 'DetailScreen',
     IMAGE: 'ImageScreen',
+    PAYMENT: 'PaymentScreen',
   }
 }
 

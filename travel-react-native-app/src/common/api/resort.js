@@ -44,6 +44,16 @@ class ResortApi extends BaseApi {
     return await httpRequest.post(url, payload);
   }
 
+  /**
+   * Lấy danh sách đã đặt
+   * @returns 
+   */
+  async book(payload) {
+    const url = this.api() + '/book';
+
+    return await httpRequest.post(url, payload);
+  }
+
 }
 
 const resortApi = new ResortApi();

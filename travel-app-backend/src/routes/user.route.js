@@ -1,23 +1,24 @@
 
 module.exports = app => {
-  const resorts = require("../controllers/user.controller.js");
+  const users = require("../controllers/user.controller.js");
 
   var router = require("express").Router();
 
-  // Create a new resort
-  router.post("/", resorts.create.bind(resorts));
+  // Create a new user
+  router.post("/", users.create.bind(users));
 
-  // Retrieve all resorts
-  router.get("/", resorts.findAll.bind(resorts));
+  // Retrieve all users
+  router.get("/", users.findAll.bind(users));
+  router.get("/role", users.findRoles.bind(users));
 
-  // Retrieve a single resort with id
-  router.get("/:id", resorts.findOne.bind(resorts));
+  // Retrieve a single user with id
+  router.get("/:id", users.findOne.bind(users));
 
-  // Update a resort with id
-  router.put("/", resorts.update.bind(resorts));
+  // Update a user with id
+  router.put("/", users.update.bind(users));
 
-  // Delete a resort with id
-  router.post("/delete", resorts.delete.bind(resorts));
+  // Delete a user with id
+  router.post("/delete", users.delete.bind(users));
 
   app.use('/api/users', router);
 };

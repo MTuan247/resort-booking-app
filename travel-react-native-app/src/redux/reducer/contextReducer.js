@@ -13,6 +13,8 @@ const contextSlice = createSlice({
       state.user = {
         user_name: user.user_name,
         name: user.name,
+        email: user.email,
+        tel: user.tel,
         token: action.payload.accessToken,
         role: user.role,
         avatar: user.avatar

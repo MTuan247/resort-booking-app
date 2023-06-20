@@ -14,7 +14,7 @@ const TabBar = ({tabs, setTab, activeTab}) => {
         return (
           <Pressable onPress={() => setTab(tab)} key={tab.key}>
             <Center height={50} style={tab.key == activeTab ? styles.activeTab : styles.tab} width={100}>
-              <Text textAlign={"center"}>{tab.title}</Text>
+              <Text color={tab.key == activeTab ? global.theme.COLORS.PRIMARY : global.theme.COLORS.BLACK } textAlign={"center"}>{tab.title}</Text>
             </Center>
           </Pressable>
         )

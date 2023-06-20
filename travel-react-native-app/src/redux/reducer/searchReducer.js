@@ -1,11 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
+import moment from 'moment';
 
 const searchSlide = createSlice({
   name: 'search',
   initialState: {
-    dateRange: null,
+    dateRange: {
+      firstDate: moment().format('yyyy-MM-DD'),
+      secondDate: moment().add(1, 'days').format('yyyy-MM-DD')
+    },
     location: '',
-    numberOfPeople: null,
+    numberOfPeople: 2,
     showOnSearch: false
   },
   reducers: {

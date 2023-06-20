@@ -7,6 +7,7 @@ const ArticleModel = db.articles;
 const ImageModel = db.images;
 const ModelState = require('../resources/ModelState');
 const { Op } = require("sequelize");
+const OrderStatus = require("../resources/OrderStatus");
 
 class ResortController extends BaseController {
   constructor(model) {
@@ -26,7 +27,8 @@ class ResortController extends BaseController {
       let details = await this.Model.findAll({
         where: {
           parent_id: id
-        }
+        },
+        raw: true
       });
 
       // Lấy dữ liệu các danh mục
@@ -45,7 +47,7 @@ class ResortController extends BaseController {
         });
         article.dataValues.images = images;
       }
-      
+
       let masterData = master.dataValues;
 
       if (context?.user_id) {
@@ -57,6 +59,22 @@ class ResortController extends BaseController {
         });
         if (favourite) {
           masterData.liked = true;
+        }
+
+        for (let item of details) {
+          let order = await db.orders.findOne({
+            where: {
+              user_id: context.user_id,
+              resort_id: item.resort_id,
+              to_date: {
+                [Op.gte]: new Date()
+              }
+            }
+          });
+
+          if (order) {
+            item.order = order;
+          }
         }
       }
 
@@ -279,7 +297,7 @@ class ResortController extends BaseController {
   }
 
   // Lấy danh sách đã đặt
-  order(req, res) {
+  async order(req, res) {
     let context = req.context;
 
     if (!context) {
@@ -289,19 +307,29 @@ class ResortController extends BaseController {
       return;
     }
 
-    var user_id = context.user_id;
+    let user_id = context.user_id;
 
-    db.sequelize.query(`SELECT r.* FROM resorts r INNER JOIN orders f ON r.resort_id = f.resort_id WHERE f.user_id = ?`,
-      { replacements: [user_id], type: db.sequelize.QueryTypes.SELECT })
-      .then(data => {
+    let sql = `SELECT r.* FROM resorts r INNER JOIN orders f ON r.resort_id = f.resort_id WHERE f.user_id = ? AND f.to_date >= ?;`;
+
+    try {
+      let data = await db.sequelize.query(sql,
+        { replacements: [user_id, new Date()], type: db.sequelize.QueryTypes.SELECT });
+  
+        if (data.length) {
+          let resortIds = data.map(x => x.parent_id);
+          data = await this.Model.findAll({
+            where: {
+              resort_id: {
+                [Op.in]: resortIds
+              }
+            }
+          });
+        }
         res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving Models."
-        });
-      });
+    } catch (error) {
+      res.status(500).send(error)
+    }
+    
   }
 
   // Đặt phòng
@@ -319,21 +347,28 @@ class ResortController extends BaseController {
     let resort_id = req.body.resort_id;
     let from_date = req.body.from_date;
     let to_date = req.body.to_date;
+    try {
+      db.schedules.create({
+        resort_id: resort_id,
+        from_date: from_date,
+        to_date: to_date
+      })
 
-    db.schedules.create({
-      resort_id: resort_id,
-      from_date: from_date,
-      to_date: to_date
-    })
+      db.orders.create({
+        user_id: user_id,
+        resort_id: resort_id,
+        from_date: from_date,
+        to_date: to_date,
+        status: OrderStatus.Accept
+      }).then((data) => {
+        res.send(data);
+      })
+    } catch (error) {
+      res.status(500).send({
+        message: error
+      });
+    }
 
-    db.orders.create({
-      user_id: user_id,
-      resort_id: resort_id,
-      from_date: from_date,
-      to_date: to_date
-    }).then((data) => {
-      res.send(data);
-    })
   }
 
   /**

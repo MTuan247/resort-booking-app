@@ -4,6 +4,9 @@ const { generateToken } = require('./auth.method.js');
 exports.register = async (req, res) => {
 	const username = req.body.user_name.toLowerCase();
 	const password = req.body.password;
+	const name = req.body.name;
+	const email = req.body.email;
+	const tel = req.body.tel;
 	const user = await userController.getUser({user_name: username});
 	if (user) res.status(409).send('Tên tài khoản đã tồn tại.');
 	else {
@@ -11,6 +14,9 @@ exports.register = async (req, res) => {
 		const newUser = {
 			user_name: username,
 			password: password,
+			name,
+			email,
+			tel,
       role: 'user'
 		};
 		const createUser = await userController.createUser(newUser);

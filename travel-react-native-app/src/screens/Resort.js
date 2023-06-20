@@ -1,6 +1,6 @@
 import { Avatar, Box, Pressable, Divider, HStack, Heading, Image, ScrollView, Text, VStack, ZStack, Button } from 'native-base';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Alert } from 'react-native';
 import { Icon } from 'native-base';
 import { Ionicons } from 'react-native-vector-icons';
 import { Dimensions } from 'react-native';
@@ -54,6 +54,14 @@ export default function ResortScreen({ route, navigation }) {
   }
 
   /**
+   * Cảnh báo khi đặt phòng
+   */
+  const showBookAlert = () =>
+    Alert.alert('Thông báo', 'Vui lòng đăng nhập để có thể đặt phòng trực tuyến!', [
+      {text: 'Đồng ý', onPress: () => console.log('OK Pressed')},
+    ]);
+
+  /**
    * Xem danh sách hình ảnh
    */
   const showImageList = () => {
@@ -62,11 +70,23 @@ export default function ResortScreen({ route, navigation }) {
 
   
   /**
+   * Xem danh sách hình ảnh
+   */
+  const showPayment = (detail) => {
+    if (!context.loggedIn) {
+      showBookAlert();
+      return;
+    }
+    navigation.navigate(screens.SCREEN.PAYMENT, { resort: item, room: detail })
+  }
+
+  
+  /**
    * Xem phòng chi tiết
    * @param {*} detail 
    */
   const showDetail = (detail) => {
-    navigation.navigate(screens.SCREEN.DETAIL, { item: detail, title: item.title })
+    navigation.navigate(screens.SCREEN.DETAIL, { item: detail, title: item.title, resort: item })
   }
 
   return (
@@ -135,7 +155,13 @@ export default function ResortScreen({ route, navigation }) {
                         </Pressable>
                         <HStack alignItems={'center'}>
                           <Text flex={1} color={global.theme.COLORS.PRICE} fontSize={16}>{formatMoney(detail.from_cost)} đ</Text>
-                          <Button bg={global.theme.COLORS.PRIMARY} borderRadius={12}>Đặt ngay</Button>
+                          {
+                            detail.order ? (
+                              <Button borderRadius={12}>Đã đặt phòng</Button>
+                            ) : (
+                              <Button onPress={() => showPayment(detail)} bg={global.theme.COLORS.PRIMARY} borderRadius={12}>Đặt ngay</Button>
+                            )
+                          }
                         </HStack>
                       </VStack>
                     </Box>

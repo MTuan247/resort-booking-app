@@ -19,8 +19,26 @@
       <v-col class="form-col">
         <form-group title="Thông tin chung">
           <div class="flex-column d-flex flex1">
-
+            <b-input :disabled="true" class="mt-2" v-model="model.name" label="Họ tên"></b-input>
           </div>
+          <div class="flex-column d-flex flex1">
+            <b-input :disabled="true" class="mt-2" v-model="model.email" label="Email"></b-input>
+          </div>
+          <div class="flex-column d-flex flex1">
+            <b-input :disabled="true" class="mt-2" v-model="model.tel" label="Số điện thoại"></b-input>
+          </div>
+        </form-group>
+        <form-group title="Phân quyền">
+          <b-autocomplete
+            class="mt-2"
+            :returnObject="true"
+            :items="roles"
+            itemTitle="role"
+            itemValue="role_id"
+            v-model="model.role_id"
+            label="Chức danh"
+          >
+          </b-autocomplete>
         </form-group>
       </v-col>
     </div>
@@ -37,6 +55,7 @@
 import {
   getCurrentInstance,
   onMounted,
+  ref,
 } from "@vue/runtime-core";
 import FormGroup from "@/components/reuse-component/FormGroup.vue";
 import userApi from "@/js/api/user/UserApi";
@@ -54,14 +73,24 @@ export default {
     const api = userApi;
     const keyEntity = 'user_id';
 
+    const roles = ref([])
+
     onMounted(() => {
       window._detail = proxy;
       console.log("UserDetail");
     });
 
+    const afterOpen = async () => {
+      api.findRoles().then(res => {
+        roles.value = res.data;
+      });
+    }
+
     return {
       api,
-      keyEntity
+      keyEntity,
+      roles,
+      afterOpen
     };
   },
 };
@@ -70,7 +99,12 @@ export default {
 <style lang="scss">
 @import "@/scss/base/popup.scss";
 .resort-detail {
-  height: 95vh;
+  height: 100vh;
+  max-height: 100vh !important;
+  margin: 0 !important;
+  position: fixed !important;
+  right: 0px;
+  width: 600px !important;
 
   .form-col {
     padding: 0px;
@@ -86,6 +120,7 @@ export default {
 
     .form-group-input {
       display: flex;
+      flex-direction: column;
     }
   }
 

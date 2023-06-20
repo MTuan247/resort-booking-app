@@ -32,7 +32,7 @@ export default function App() {
   }, [fontsLoaded]);
 
   if (!fontsLoaded) {
-    return null;
+    return <View></View>;
   }
 
   return (
