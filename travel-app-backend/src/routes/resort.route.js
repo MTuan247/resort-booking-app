@@ -18,6 +18,9 @@ module.exports = app => {
   router.post("/list", resorts.findAll.bind(resorts));
   router.post("/search", resorts.search.bind(resorts));
 
+  // Danh sách gợi ý
+  router.get("/suggestion", resorts.suggestion.bind(resorts));
+
   // Xử lý yêu thích
   router.post("/favourite", resorts.favourite.bind(resorts));
   router.post("/like", resorts.like.bind(resorts));

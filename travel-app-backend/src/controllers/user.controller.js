@@ -54,6 +54,21 @@ class UserController extends BaseController {
       })
   }
 
+  // Find a single Model with an id
+  async findOne(req, res) {
+    const id = req.params.id;
+
+    let data = await this.Model.findByPk(id, { raw: true })
+      
+    if (data.role_id) {
+      let role = await db.roles.findByPk(data.role_id);
+      data.role = role.role;
+      data.role_title = role.role_title;
+    }
+
+    res.send(data);
+  }
+
   // Retrieve all Models from the database.
   findRoles(req, res) {
     db.roles.findAll({ raw: true })

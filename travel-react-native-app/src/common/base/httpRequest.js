@@ -2,6 +2,7 @@ import axios from 'axios'
 import { API_URL } from '../../config/api.js';
 
 import { store } from '../../redux/store';
+import { formatDate } from '../function/format';
 
 const httpRequest = {};
 
@@ -25,7 +26,7 @@ httpRequest.send = (url, data, config = { method: "post" },) => {
     }
   }
 
-  console.log(`url: ${customUrl}`)
+  console.log(`${formatDate(new Date(), 'DD/MM/yyyy hh:mm:ss a')} url: ${customUrl}`)
 
   let state = store.getState();
 

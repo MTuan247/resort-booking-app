@@ -1,29 +1,72 @@
-import { Box, Center, Heading, Image, Text } from 'native-base';
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import { Box, Center, Heading, Image, Pressable, Text } from 'native-base';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Dimensions } from 'react-native';
 import { FontAwesome } from 'react-native-vector-icons';
 import { Icon } from 'native-base';
+import Carousel from '../base/Carousel';
+import resortApi from '../../common/api/resort';
+import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import screens from '../../resources/screens';
 
-export default function HomeSuggestion({ navigation }) {
+const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
+
+// const slideList = Array.from({ length: 5 }).map((_, i) => {
+//   return {
+//     id: i,
+//     image: `https://picsum.photos/1440/2842?random=${i}`,
+//     title: `This is the title ${i + 1}!`,
+//     description: `This is the description ${i + 1}!`,
+//   };
+// });
+
+export default function HomeSuggestion() {
+
+  const contextState = useSelector((state) => state.context);
+
+  const navigation = useNavigation();
+
+  /**
+   * Mở form chi tiết
+   */
+  const showDetail = (item) => {
+    navigation.navigate(screens.SCREEN.RESORT, { item: item, title: 'Trang chủ' })
+  }
+
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    resortApi.suggestion().then(res => {
+      setData(res.data)
+    })
+  }, [contextState.loggedIn]);
+
   return (
-    <Box position='relative' height={320} borderRadius={25} backgroundColor={global.theme.COLORS.LIGHTGRAY} style={styles.suggestions}>
-      <Image margin={4} source={{
-        uri: "https://firebasestorage.googleapis.com/v0/b/travel-web-app-6fd3b.appspot.com/o/images%2F12de4890-b4d3-11ed-9c5f-b94700cd92b3%2F1676556753961-872309572.jpg?alt=media"
-      }} borderRadius={25} alt="Alternate Text" style={styles.cover} resizeMode="cover" height='200' />
-      <Box marginX={4} marginBottom={2}>
-        <Heading noOfLines={1} fontSize={16} fontWeight={700}>Onsen Villas Resort</Heading>
-        <Text noOfLines={2}>Onsen Villas Resort – điểm đến yên bình theo phong cách Nhật Bản hòa giữa thiên nhiên vùng Hoà Bình tươi đẹp.</Text>
-      </Box>
-      <Center height={10} width={10} borderRadius={100} backgroundColor={global.theme.COLORS.WHITE} style={styles.heart}>
-        <Icon as={FontAwesome} name='heart-o' size={6} color={global.theme.COLORS.BLACK} />
-      </Center>
-    </Box>
+    <>
+      <Carousel
+        data={data}
+        keyExtractor={(item) => item.resort_id}
+        renderItem={({ item }) => (
+          <Pressable onPress={() => showDetail(item)} position='relative' height={320} borderRadius={25} backgroundColor={global.theme.COLORS.LIGHTGRAY} style={styles.suggestions}>
+            <Image margin={4} source={{
+              uri: item.image
+            }} borderRadius={25} alt="Alternate Text" style={styles.cover} resizeMode="cover" height='200' />
+            <Box marginX={4} marginBottom={2}>
+              <Heading noOfLines={1} fontSize={16} fontWeight={700}>{item.title}</Heading>
+              <Text noOfLines={2}>{item.description}</Text>
+            </Box>
+            <Center height={10} width={10} borderRadius={100} backgroundColor={global.theme.COLORS.WHITE} style={styles.heart}>
+              <Icon as={FontAwesome} name={item.users?.length ? 'heart' : 'heart-o'} size={6} color={item.users?.length ? global.theme.COLORS.PRIMARY : global.theme.COLORS.BLACK} />
+            </Center>
+          </Pressable>
+        )}
+      ></Carousel>
+    </>
   )
 }
 
 const styles = StyleSheet.create({
   suggestions: {
-
+    width: windowWidth
   },
   heart: {
     position: 'absolute',

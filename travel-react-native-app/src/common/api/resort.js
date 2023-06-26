@@ -54,6 +54,16 @@ class ResortApi extends BaseApi {
     return await httpRequest.post(url, payload);
   }
 
+  /**
+   * Lấy danh sách đã đặt
+   * @returns 
+   */
+  async suggestion(payload) {
+    const url = this.api() + '/suggestion';
+
+    return await httpRequest.get(url, payload);
+  }
+
 }
 
 const resortApi = new ResortApi();

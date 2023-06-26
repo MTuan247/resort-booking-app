@@ -83,7 +83,7 @@ function BottomTab() {
  * Config cho trang chi tiết
  */
 const resortOptions = ({ route }) => ({
-  headerTitle: 'Tìm kiếm',
+  headerTitle: route.params.title || 'Tìm kiếm',
   headerTransparent: true,
   headerTintColor: global.theme.COLORS.WHITE,
   headerStyle: {

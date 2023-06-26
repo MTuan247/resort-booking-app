@@ -314,22 +314,22 @@ class ResortController extends BaseController {
     try {
       let data = await db.sequelize.query(sql,
         { replacements: [user_id, new Date()], type: db.sequelize.QueryTypes.SELECT });
-  
-        if (data.length) {
-          let resortIds = data.map(x => x.parent_id);
-          data = await this.Model.findAll({
-            where: {
-              resort_id: {
-                [Op.in]: resortIds
-              }
+
+      if (data.length) {
+        let resortIds = data.map(x => x.parent_id);
+        data = await this.Model.findAll({
+          where: {
+            resort_id: {
+              [Op.in]: resortIds
             }
-          });
-        }
-        res.send(data);
+          }
+        });
+      }
+      res.send(data);
     } catch (error) {
       res.status(500).send(error)
     }
-    
+
   }
 
   // Đặt phòng
@@ -439,6 +439,40 @@ class ResortController extends BaseController {
       });
     }
 
+  }
+
+  // Suggestion
+  async suggestion(req, res) {
+    let context = req.context;
+    let where = {
+      parent_id: {
+        [Op.is]: null
+      },
+      resort_id: {
+        [Op.not]: null
+      }
+    };
+
+    let joinedWhere = {
+      user_id: context?.user_id || ""
+    }
+
+    try {
+      // Lấy danh sách resort
+      let resorts = await this.Model.findAll({
+        where: where,
+        include: [{model: db.users, where: joinedWhere, required: false }],
+        limit: 5
+      });
+
+      res.send(resorts);
+
+    } catch (err) {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Models."
+      });
+    }
   }
 }
 

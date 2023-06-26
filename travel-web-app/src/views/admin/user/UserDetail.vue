@@ -3,15 +3,15 @@
     v-slot="{ close }"
     v-bind="$attrs"
     classes="modal-container"
-    content-class="modal-content resort-detail"
+    content-class="modal-content user-detail"
     :min-width="200"
     :height="800"
     v-model="show"
     :click-to-close="false"
-    name="ResortDetail"
+    name="UserDetail"
     @before-open="beforeOpen"
   >
-    <button class="modal__close" @click="close">
+    <button ref="close" class="modal__close" @click="close">
       <v-icon icon="mdi-close"></v-icon>
     </button>
     <span class="modal__title">Phân quyền</span>
@@ -33,9 +33,9 @@
             class="mt-2"
             :returnObject="true"
             :items="roles"
-            itemTitle="role"
+            itemTitle="role_title"
             itemValue="role_id"
-            v-model="model.role_id"
+            v-model="role"
             label="Chức danh"
           >
           </b-autocomplete>
@@ -56,13 +56,14 @@ import {
   getCurrentInstance,
   onMounted,
   ref,
+  computed
 } from "@vue/runtime-core";
 import FormGroup from "@/components/reuse-component/FormGroup.vue";
 import userApi from "@/js/api/user/UserApi";
 import baseDetail from '@/js/base/baseDetail';
 
 export default {
-  name: "ResortDetail",
+  name: "UserDetail",
   extends: baseDetail,
   components: {
     FormGroup,
@@ -74,6 +75,19 @@ export default {
     const keyEntity = 'user_id';
 
     const roles = ref([])
+
+    const role = computed({
+      get() {
+        return {
+          role_title: proxy.model.role_title || null,
+          role_id: proxy.model.role_id || null,
+        };
+      },
+      set(cbxValue) {
+        proxy.model.role_title = cbxValue.role_title;
+        proxy.model.role_id = cbxValue.role_id;
+      },
+    });
 
     onMounted(() => {
       window._detail = proxy;
@@ -90,7 +104,8 @@ export default {
       api,
       keyEntity,
       roles,
-      afterOpen
+      afterOpen,
+      role
     };
   },
 };
@@ -98,7 +113,7 @@ export default {
 
 <style lang="scss">
 @import "@/scss/base/popup.scss";
-.resort-detail {
+.user-detail {
   height: 100vh;
   max-height: 100vh !important;
   margin: 0 !important;

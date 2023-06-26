@@ -78,7 +78,19 @@ export default {
         }
         this.$toast.success("Lưu dữ liệu thành công");
         this.show = false;
+        this.afterSave(true);
+        this.close();
       }
+    },
+
+    close() {
+      if (this.$refs.close) {
+        this.$refs.close.click();
+      }
+    },
+
+    afterSave() {
+
     }
 
   },
