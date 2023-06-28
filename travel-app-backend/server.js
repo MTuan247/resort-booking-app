@@ -40,6 +40,7 @@ require("./src/routes/resort.route")(app);
 require("./src/routes/location.route")(app);
 require("./src/routes/user.route")(app);
 require("./src/auth/auth.route")(app);
+require("./src/payment/payment.route")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 5678;

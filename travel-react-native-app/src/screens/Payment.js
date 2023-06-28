@@ -10,6 +10,7 @@ import ShowDateRange from '../components/reuse/ShowDateRange';
 import resortApi from '../common/api/resort';
 import DateRange from '../components/modal/DateRange';
 import { validateEmail, validatePhone } from '../common/function/validate';
+import paymentApi from '../common/api/payment';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -64,7 +65,7 @@ export default function PaymentScreen({ route }) {
     })
   }
 
-  const book = () => {
+  const book = async () => {
     if (!name) {
       showToastMsg();
       nameInput.current.focus();
@@ -95,13 +96,19 @@ export default function PaymentScreen({ route }) {
       return;
     }
 
-    resortApi.book({
-      resort_id: param.room.resort_id,
-      from_date: selectedRange.firstDate,
-      to_date: selectedRange.secondDate,
-    }).then(() => {
-      navigation.goBack();
-    })
+    let paymentUrl = await paymentApi.createPaymentUrl({
+      amount: param.room.from_cost,
+      bankCode: "VNBANK",
+      language: "vn"
+    });
+
+    // resortApi.book({
+    //   resort_id: param.room.resort_id,
+    //   from_date: selectedRange.firstDate,
+    //   to_date: selectedRange.secondDate,
+    // }).then(() => {
+    //   navigation.goBack();
+    // })
   }
 
   return (
