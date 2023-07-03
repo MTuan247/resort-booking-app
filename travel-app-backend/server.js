@@ -39,6 +39,7 @@ app.get("/", (req, res) => {
 require("./src/routes/resort.route")(app);
 require("./src/routes/location.route")(app);
 require("./src/routes/user.route")(app);
+require("./src/routes/order.route")(app);
 require("./src/auth/auth.route")(app);
 require("./src/payment/payment.route")(app);
 

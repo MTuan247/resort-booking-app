@@ -9,6 +9,8 @@ import Toast, { useToast } from "vue-toastification";
 
 import { Constants, Enums } from '@/resources/index.js';
 
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 
 export const registerPlugin = (app) => {
 
@@ -27,7 +29,7 @@ export const registerPlugin = (app) => {
   app.use(router);
   app.use(vfmPlugin);
   app.use(UUID);
-  app.use(Toast, {
-    
-  });
+  app.use(Toast, {});
+
+  app.component('VueDatePicker', VueDatePicker);
 }

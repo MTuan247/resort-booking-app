@@ -24,7 +24,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     },
     description: {
-      type: Sequelize.STRING
+      type: Sequelize.TEXT,
     },
     email: {
       type: Sequelize.STRING
@@ -47,6 +47,15 @@ module.exports = (sequelize, Sequelize) => {
     },
     max_people: {
       type: Sequelize.INTEGER
+    },
+    user_id: {
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4,
+    },
+    quantity: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      defaultValue: 1
     },
   });
 

@@ -57,7 +57,7 @@
                 label="Giá"
               ></b-input>
             </div>
-            <div class="d-flex mt-2">
+            <!-- <div class="d-flex mt-2">
               <b-input
                 class="mr-2"
                 v-model="model.email"
@@ -69,7 +69,7 @@
                 inputType="number"
                 label="Số điện thoại"
               ></b-input>
-            </div>
+            </div> -->
             <div class="d-flex mt-2">
               <b-autocomplete
                 class="flex1"
@@ -201,7 +201,11 @@ export default {
         });
       }
 
-      resortApi.list().then((res) => {
+      resortApi.list({
+        Condition: {
+          parent_id: null
+        }
+      }).then((res) => {
         parentList.value = res.data
           .filter((x) => x.resort_id != model.value.resort_id)
           .map((x) => {

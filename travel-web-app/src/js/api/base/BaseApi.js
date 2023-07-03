@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { httpRequest } from '../base/httpRequest';
 
 export default class BaseAPI {
 
@@ -12,61 +12,37 @@ export default class BaseAPI {
   }
 
   async get(param) {
-    var res = await axios({
-      method: 'get',
-      url: this.getUrl(),
-      data: param
-    });
+    var res = await httpRequest.get(this.getUrl(), param);
 
     return res;
   }
 
   async getById(id) {
-    var res = await axios({
-      method: 'get',
-      url: this.getUrl() + id,
-      data: id
-    });
+    var res = await httpRequest.get(this.getUrl() + id, id);
 
     return res;
   }
 
   async list(param) {
-    var res = await axios({
-      method: 'post',
-      url: this.getUrl() + 'list',
-      data: param
-    });
+    var res = await httpRequest.post(this.getUrl() + 'list', param);
 
     return res;
   }
 
   async post(param) {
-    var res = await axios({
-      method: 'post',
-      url: this.getUrl(),
-      data: param
-    });
+    var res = await httpRequest.post(this.getUrl(), param);
 
     return res;
   }
 
   async put(param) {
-    var res = await axios({
-      method: 'put',
-      url: this.getUrl(),
-      data: param
-    });
+    var res = await httpRequest.put(this.getUrl(), param);
 
     return res;
   }
 
   async delete(param) {
-    var res = await axios({
-      method: 'post',
-      url: this.getUrl() + '/delete',
-      data: param
-    });
+    var res = await httpRequest.post(this.getUrl() + '/delete', param);
 
     return res;
   }

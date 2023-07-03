@@ -8,11 +8,31 @@ class UserApi extends BaseAPI {
   }
 
   /**
+   * Danh sách
+   * @returns 
+   */
+  async list(param) {
+    let res = await httpRequest.post(this.getUrl() + 'list', param);
+
+    return res;
+  }
+
+  /**
    * Danh sách chức danh
    * @returns 
    */
   async findRoles() {
     let res = await httpRequest.get(this.getUrl() + 'role');
+
+    return res;
+  }
+
+  /**
+   * Xác nhận
+   * @returns 
+   */
+  async approve(param) {
+    let res = await httpRequest.post(this.getUrl() + 'approve', param);
 
     return res;
   }

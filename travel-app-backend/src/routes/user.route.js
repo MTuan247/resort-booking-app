@@ -9,7 +9,11 @@ module.exports = app => {
 
   // Retrieve all users
   router.get("/", users.findAll.bind(users));
+  router.post("/list", users.findAll.bind(users));
   router.get("/role", users.findRoles.bind(users));
+
+  // Xác nhận
+  router.post("/approve", users.approve.bind(users));
 
   // Retrieve a single user with id
   router.get("/:id", users.findOne.bind(users));

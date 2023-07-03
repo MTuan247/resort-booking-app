@@ -10,6 +10,7 @@ import resortApi from '../common/api/resort';
 import { useSelector, useDispatch } from 'react-redux';
 import { formatMoney } from '../common/function/format';
 import { useToast } from 'native-base';
+import BaseButton from '../components/base/BaseButton';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -70,7 +71,7 @@ export default function ResortScreen({ route, navigation }) {
 
   
   /**
-   * Xem danh sách hình ảnh
+   * Xem thanh toán
    */
   const showPayment = (detail) => {
     if (!context.loggedIn) {
@@ -101,7 +102,7 @@ export default function ResortScreen({ route, navigation }) {
           <VStack margin={4}>
             <Heading lineHeight={24} fontWeight={600} fontSize={20}>{item.title}</Heading>
             <HStack paddingTop={1} alignItems={"center"}>
-              <HStack flex={1} alignItems={"center"}>
+              <HStack marginRight={4} flex={1} alignItems={"center"}>
                 <Icon as={Ionicons} name={"location-sharp"} size={5} color={global.theme.COLORS.PRIMARY} />
                 <Text marginLeft={1} fontSize={15} color={global.theme.COLORS.GRAY} fontWeight={600}>{item.address}</Text>
               </HStack>
@@ -138,39 +139,68 @@ export default function ResortScreen({ route, navigation }) {
               </ScrollView>
             </Box>
           </Box>
-          <Box paddingX={4} marginTop={2} paddingY={2}>
-            <Text fontWeight={600} fontSize={18} textTransform={"uppercase"}>Chi tiết</Text>
-            <ScrollView marginTop={1}>
-              {
-                item.details && item.details.map(detail => {
-                  return (
-                    <Box marginBottom={2} key={detail.resort_id} >
-                      <VStack marginBottom={2} marginRight={2}>
-                        <Pressable onPress={() => showDetail(detail)}>
-                          <Image borderRadius={12} alt={detail.title} resizeMethod='scale' height={windowHeight * 0.2} source={{ uri: detail.image }}></Image>
-                          <HStack alignItems={'center'}>
-                            <Text flex={1} marginY={2} fontSize={16} fontWeight={600}>{detail.title}</Text>
-                            <Icon color={global.theme.COLORS.BLACK} size={6} as={Ionicons} name='chevron-forward'></Icon>
-                          </HStack>
-                        </Pressable>
-                        <HStack alignItems={'center'}>
-                          <Text flex={1} color={global.theme.COLORS.PRICE} fontSize={16}>{formatMoney(detail.from_cost)} đ</Text>
-                          {
-                            detail.order ? (
-                              <Button borderRadius={12}>Đã đặt phòng</Button>
-                            ) : (
-                              <Button onPress={() => showPayment(detail)} bg={global.theme.COLORS.PRIMARY} borderRadius={12}>Đặt ngay</Button>
-                            )
-                          }
-                        </HStack>
-                      </VStack>
-                    </Box>
-                  )
-                })
-              }
-            </ScrollView>
-          </Box>
+          {
+            item.details?.length ? (
+              <Box paddingX={4} marginTop={2} paddingY={2}>
+                <Text fontWeight={600} fontSize={18} textTransform={"uppercase"}>Chi tiết</Text>
+                <ScrollView marginTop={1}>
+                  {
+                    item.details && item.details.map(detail => {
+                      return (
+                        <Box marginBottom={2} key={detail.resort_id} >
+                          <VStack marginBottom={2} marginRight={2}>
+                            <Pressable onPress={() => showDetail(detail)}>
+                              <Image borderRadius={12} alt={detail.title} resizeMethod='scale' height={windowHeight * 0.2} source={{ uri: detail.image }}></Image>
+                              <HStack alignItems={'center'}>
+                                <Text flex={1} marginY={2} fontSize={16} fontWeight={600}>{detail.title}</Text>
+                                <Icon color={global.theme.COLORS.BLACK} size={6} as={Ionicons} name='chevron-forward'></Icon>
+                              </HStack>
+                            </Pressable>
+                            <HStack alignItems={'center'}>
+                              <Text flex={1} color={global.theme.COLORS.PRICE} fontSize={16}>{formatMoney(detail.from_cost)} đ</Text>
+                              {
+                                detail.order ? (
+                                  <Button borderRadius={12}>Đã đặt phòng</Button>
+                                ) : (
+                                  <Button onPress={() => showPayment(detail)} bg={global.theme.COLORS.PRIMARY} borderRadius={12}>Đặt ngay</Button>
+                                )
+                              }
+                            </HStack>
+                          </VStack>
+                        </Box>
+                      )
+                    })
+                  }
+                </ScrollView>
+              </Box>
+            ) : (<></>)
+          }
+          {
+            param.item?.order && (
+              <Box marginTop={4}>
+                <Text fontWeight={600} fontSize={18} textTransform={"uppercase"}>Thông tin đặt phòng</Text>
+                <Text fontWeight={500} fontSize={14}>Trạng thái: {param.item.order?.status ? 'Đặt phòng thành công' : 'Đang xử lý'}</Text>
+                <ShowDateRange firstDate={param.item?.order.from_date}
+                  secondDate={param.item?.order.to_date}></ShowDateRange>
+              </Box>
+            )
+          }
         </ScrollView>
+        {
+          item?.order ? (
+            <></>
+          ) : (
+            <HStack justifyContent={"space-between"} paddingX={6} alignItems={"center"} borderTopRadius={40} height={windowHeight * 0.1} backgroundColor={global.theme.COLORS.DARKGRAY}>
+              <Text fontSize={16} color={theme.COLORS.WHITE}>{formatMoney(item.from_cost)} đ/ngày</Text>
+              <BaseButton onPress={() => showPayment(item)} paddingLeft={4} paddingRight={4}>
+                <HStack alignItems={"center"}>
+                  <Text color={global.theme.COLORS.WHITE}>Đặt ngay</Text>
+                  <Icon marginLeft={2} as={Ionicons} name={"arrow-forward"} size={18} color={global.theme.COLORS.WHITE} />
+                </HStack>
+              </BaseButton>
+            </HStack>
+          )
+        }
       </Box>
     </>
   )

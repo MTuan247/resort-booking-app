@@ -31,6 +31,7 @@
   z-index: 1;
   text-align: left;
   cursor: pointer;
+  border-right: 1px dashed #aaa;
 }
 
 .grid th:hover {
@@ -40,6 +41,7 @@
 .grid td {
   color: #222222;
   font-family: GoogleSans-Light;
+  border-right: 1px dashed #aaa;
 }
 
 .grid .text-align-center {
@@ -76,6 +78,10 @@
 .grid .check-box {
   text-align: center;
   position: relative;
+
+  .v-checkbox {
+    justify-items: center;
+  }
 
   input {
     position: absolute;

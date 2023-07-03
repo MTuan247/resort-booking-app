@@ -1,7 +1,8 @@
-import { Avatar, Box, HStack, Alert, VStack, Text, Pressable, Icon, FormControl, Input, Button } from 'native-base';
+import { Box, HStack, VStack, Text, Pressable, Icon, FormControl, Input, Button } from 'native-base';
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import { CheckBox } from '@rneui/themed';
 import MyAlert from '../components/alert/MyAlert';
 import { login } from '../redux/reducer/contextReducer';
 import screens from '../resources/screens';
@@ -23,65 +24,81 @@ export default function RegisterScreen() {
   const [rewritePassword, setRewritePassword] = useState(null);
 
   const [error, setError] = useState(null);
+  const [isResort, setIsResort] = useState(false);
+
+  /**
+   * Cảnh báo khi đặt phòng
+   */
+  const showError = (msg) =>
+    Alert.alert('Thông báo', msg, [
+      { text: 'Đồng ý', onPress: () => console.log('OK Pressed') },
+    ]);
 
   const handleRegister = async () => {
     if (!userName) {
-      setError('Tên tài khoản không được để trống');
+      showError('Tên tài khoản không được để trống');
       return;
     }
 
     if (!name) {
-      setError('Họ và tên không được để trống.');
+      showError('Họ và tên không được để trống.');
       return;
     }
 
     if (!email) {
-      setError('Email không được để trống.');
+      showError('Email không được để trống.');
       return;
     }
 
     if (!validateEmail(email)) {
-      setError('Email không đúng định dạng.');
+      showError('Email không đúng định dạng.');
       return;
     }
 
     if (!tel) {
-      setError('Số điện thoại không được để trống.');
+      showError('Số điện thoại không được để trống.');
       return;
     }
 
     if (!validatePhone(tel)) {
-      setError('Số điện thoại không đúng định dạng.');
+      showError('Số điện thoại không đúng định dạng.');
       return;
     }
 
     if (!password) {
-      setError('Mật khẩu không được để trống.');
+      showError('Mật khẩu không được để trống.');
       return;
     }
 
     if (password.length < 6) {
-      setError('Mật khẩu phải có ít nhất 6 ký tự.');
+      showError('Mật khẩu phải có ít nhất 6 ký tự.');
       return;
     }
 
     if (password != rewritePassword) {
-      setError('Nhập lại mật khẩu không đúng.');
+      showError('Nhập lại mật khẩu không đúng.');
       return;
     }
-    
+
     try {
       let user = {
         user_name: userName,
         password: password,
         name: name,
         email: email,
-        tel: tel
+        tel: tel,
+        resort_owner: isResort
       }
       await authApi.register(user);
-      navigation.navigate(screens.SCREEN.LOGIN);
+      // navigation.navigate(screens.SCREEN.LOGIN);
+      let res = await authApi.login(user);
+      dispatch(login(res.data));
+      if (isResort) {
+        showError('Yêu cầu cấp quyền tài khoản quản lý khu nghỉ dưỡng cần quản trị hệ thống xác nhận. Vui lòng liên hệ với bộ phận quản lý để có thể được xác nhận sớm nhất.')
+      }
+      navigation.navigate(screens.SCREEN.PROFILE);
     } catch (error) {
-      setError('Tài khoản đã tồn tại vui lòng nhập tài khoản khác.')
+      showError('Tài khoản đã tồn tại vui lòng nhập tài khoản khác.')
     }
   }
 
@@ -94,10 +111,17 @@ export default function RegisterScreen() {
       <Input keyboardType='numeric' value={tel} onChangeText={text => setTel(text)} borderRadius={8} marginBottom={2} placeholder="Số điện thoại"></Input>
       <Input value={password} onChangeText={text => setPassword(text)} secureTextEntry={true} borderRadius={8} marginBottom={2} placeholder="Mật khẩu"></Input>
       <Input value={rewritePassword} onChangeText={text => setRewritePassword(text)} secureTextEntry={true} borderRadius={8} marginBottom={4} placeholder="Nhập lại mật khẩu"></Input>
-      {
+      {/* {
         error && <MyAlert marginBottom={4} status="error" title={error}></MyAlert>
-      }
-      <Button onPress={() => handleRegister()} borderRadius={8} backgroundColor={global.theme.COLORS.PRIMARY} >Đăng ký</Button>
+      } */}
+      <CheckBox
+        iconType="material-community"
+        checkedIcon="checkbox-marked"
+        title='Tài khoản quản lý khu nghỉ dưỡng'
+        textStyle={styles.textCheckbox}
+        containerStyle={styles.containerCheckbox}
+        uncheckedIcon="checkbox-blank-outline" checked={isResort} onPress={() => { setIsResort(!isResort) }}></CheckBox>
+      <Button marginTop={4} onPress={() => handleRegister()} borderRadius={8} backgroundColor={global.theme.COLORS.PRIMARY} >Đăng ký</Button>
     </Box>
   )
 }
@@ -107,4 +131,10 @@ const styles = StyleSheet.create({
     marginTop: 50,
     marginHorizontal: 40,
   },
+  containerCheckbox: {
+    backgroundColor: global.theme.COLORS.CARD
+  },
+  textCheckbox: {
+    // fontWeight: 500
+  }
 });

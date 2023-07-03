@@ -22,8 +22,14 @@
         v-else-if="col.fieldName == 'Tree'"
       >
         <v-icon
+          v-if="row._children?.length"
           :icon="showChildren ? 'mdi-menu-down' : 'mdi-menu-right'"
         ></v-icon>
+        <!-- <v-icon
+          v-else
+          :icon="'fa:fas fa-horizontal-rule'"
+        ></v-icon> -->
+        <span v-else>-</span>
       </td>
       <td v-else-if="col.fieldName == 'Action'">
         <slot name="action" :row="row"></slot>

@@ -7,6 +7,7 @@ exports.register = async (req, res) => {
 	const name = req.body.name;
 	const email = req.body.email;
 	const tel = req.body.tel;
+	const resort_owner = req.body.resort_owner;
 	const user = await userController.getUser({user_name: username});
 	if (user) res.status(409).send('Tên tài khoản đã tồn tại.');
 	else {
@@ -17,7 +18,8 @@ exports.register = async (req, res) => {
 			name,
 			email,
 			tel,
-      role: 'user'
+      role: 'user',
+			in_request: resort_owner
 		};
 		const createUser = await userController.createUser(newUser);
 		if (!createUser) {

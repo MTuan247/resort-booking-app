@@ -9,6 +9,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import resortApi from '../common/api/resort';
 import SearchBar from '../components/reuse/SearchBar';
 import { setShowSearch } from '../redux/reducer/searchReducer.js';
+import NoData from '../components/reuse/NoData';
 
 export default function SearchScreen() {
 
@@ -65,6 +66,11 @@ export default function SearchScreen() {
           })
         }
       </ScrollView>
+      {
+        items.length ? (<></>) : (
+          <NoData />
+        )
+      }
     </Box>
   )
 }

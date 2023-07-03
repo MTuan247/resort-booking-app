@@ -5,7 +5,9 @@ import store from '@/store/index.js';
 // These can be imported from other files
 import ResortList from '@/views/admin/resort/ResortList.vue';
 import UserList from '@/views/admin/user/UserList.vue';
+import OrderList from '@/views/admin/order/OrderList.vue';
 import Login from '@/views/auth/Login.vue';
+import RoleRequestList from '@/views/admin/role_request/RoleRequestList.vue'
 
 // 2. Define some routes
 // Each route should map to a component.
@@ -19,9 +21,19 @@ const routes = [
         component: ResortList,
       },
       {
+        path: 'role-request',
+        name: 'role-request',
+        component: RoleRequestList,
+      },
+      {
         path: 'user',
         name: 'user',
         component: UserList,
+      },
+      {
+        path: 'order',
+        name: 'order',
+        component: OrderList,
       },
       {
         path: '',
@@ -53,7 +65,7 @@ router.beforeEach(async (to, from, next) => {
   // next-line: check if route ("to" object) needs authenticated
   if (to.matched.some((record) => record.meta.requiresAuth) && !userInfo) {
     next('/login');
-  } else if (to.matched.some((record) => record.meta.requiresAdmin) && (!userInfo || userInfo?.role != 'admin' )) {
+  } else if (to.matched.some((record) => record.meta.requiresAdmin) && (!userInfo || (userInfo?.role != 'admin' && userInfo?.role != 'resort_owner' ))) {
     next('/login');
   } else next();
 });

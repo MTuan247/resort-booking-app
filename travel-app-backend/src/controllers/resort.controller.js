@@ -16,6 +16,29 @@ class ResortController extends BaseController {
     this.ImageModel = ImageModel;
   }
 
+  // Retrieve all Models from the database.
+  async findAll(req, res) {
+    var condition = req.body.Condition;
+    let context = req.context;
+
+    if (context?.user_id && context?.role == 'resort_owner') {
+      condition = { ...condition, user_id: context.user_id };
+    } else if (!context) {
+      res.status(401).send([]);
+      return;
+    }
+
+    try {
+      let data = await this.Model.findAll({ where: condition });
+      res.send(data);
+    } catch (err) {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Models."
+      });
+    }
+  }
+
   // Find a single Model with an id
   async findOne(req, res) {
     const id = req.params.id;
@@ -98,6 +121,15 @@ class ResortController extends BaseController {
       const model = {
         ...req.body.Model
       };
+
+      const context = req.context;
+
+      if (context?.user_id) {
+        model.user_id = context.user_id;
+      } else if (!context) {
+        res.status(401).send(null);
+        return;
+      }
 
       let images = []
       for (const item of model.articles) {
@@ -461,7 +493,7 @@ class ResortController extends BaseController {
       // Lấy danh sách resort
       let resorts = await this.Model.findAll({
         where: where,
-        include: [{model: db.users, where: joinedWhere, required: false }],
+        include: [{ model: db.users, where: joinedWhere, required: false }],
         limit: 5
       });
 

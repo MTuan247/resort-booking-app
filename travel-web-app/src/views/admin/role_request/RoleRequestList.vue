@@ -2,7 +2,7 @@
   <div class="user admin-list">
     <div class="list-toolbar">
       <div class="list-toolbar-left">
-        <v-breadcrumbs :items="['Quản lý', 'Phân quyền']"></v-breadcrumbs>
+        <v-breadcrumbs :items="['Quản lý', 'Yêu cầu cấp quyền']"></v-breadcrumbs>
       </div>
       <div class="list-toolbar-right">
       </div>
@@ -16,7 +16,7 @@
         :idField="this.keyEntity"
       >
         <template #action="{ row }">
-          <v-icon icon="mdi-pencil-outline" @click="editRow(row)"></v-icon>
+          <v-icon title="Xác nhận" icon="fa:fas fa-check" @click="approve(row)"></v-icon>
         </template>
       </b-grid-table>
     </div>
@@ -24,14 +24,14 @@
 </template>
 
 <script>
-import { ref } from "@vue/runtime-core";
+import { getCurrentInstance, ref } from "@vue/runtime-core";
 import BGridTable from "@/components/base/BGridTable.vue";
 
 import baseList from "@/js/base/baseList";
 import UserApi from "@/js/api/user/UserApi";
 
 export default {
-  name: "UserList",
+  name: "RoleRequestList",
   extends: baseList,
   components: {
     BGridTable,
@@ -40,7 +40,33 @@ export default {
 
     const api = UserApi;
     const detailForm = 'UserDetail';
-    const keyEntity = 'user_id'
+    const keyEntity = 'user_id';
+
+    const { proxy } = getCurrentInstance();
+
+    // Load dữ liệu
+    const loadData = async () => {
+      var res = await proxy.api.list({ Condition: {
+        in_request: true
+      }});
+      proxy.gridData = proxy.customData(res.data)
+    }
+
+    /**
+     * Xác nhận tài khoản
+     */
+    const approve = async (user) => {
+      try {
+        await proxy.api.approve({user_id: user.user_id});
+
+        proxy.$toast.success('Cấp quyền tài khoản thành công!')
+        proxy.loadData();
+      } catch {
+        proxy.$toast.error('Cấp quyền tài khoản thất bại!')
+
+      }
+      
+    }
 
     const columns = ref([
       {
@@ -49,9 +75,19 @@ export default {
         style: "width: 200px;",
       },
       {
-        title: "Chức danh",
-        fieldName: "role_title",
+        title: "Họ và tên",
+        fieldName: "name",
         style: "width: 300px;",
+      },
+      {
+        title: "Email",
+        fieldName: "email",
+        style: "width: 150px;",
+      },
+      {
+        title: "Số điện thoại",
+        fieldName: "tel",
+        style: "width: 150px;",
       },
       {
         title: "",
@@ -64,7 +100,9 @@ export default {
       columns,
       api,
       detailForm,
-      keyEntity
+      keyEntity,
+      loadData,
+      approve
     };
   },
 };

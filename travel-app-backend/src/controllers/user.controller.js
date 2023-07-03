@@ -59,7 +59,7 @@ class UserController extends BaseController {
     const id = req.params.id;
 
     let data = await this.Model.findByPk(id, { raw: true })
-      
+
     if (data.role_id) {
       let role = await db.roles.findByPk(data.role_id);
       data.role = role.role;
@@ -75,6 +75,27 @@ class UserController extends BaseController {
       .then(data => {
         res.send(data);
       })
+  }
+
+
+  // Cấp quyền tài khoản
+  async approve(req, res) {
+
+    let user_id = req.body.user_id;
+
+    try {
+      let sql = `UPDATE users u LEFT JOIN roles r ON r.role = 'resort_owner' SET u.in_request = FALSE, u.role_id = r.role_id WHERE u.user_id = :user_id;`;
+
+      await db.sequelize.query(sql, {
+        replacements: { user_id },
+      });
+
+      res.send(true);
+    } catch (error) {
+      res.status(500).send({
+        message: "Error updating Model with id=" + id
+      });
+    }
   }
 }
 

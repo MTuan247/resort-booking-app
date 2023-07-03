@@ -12,11 +12,23 @@
         </div>
         <div class="nav-item-text">Khu nghỉ dưỡng</div>
       </router-link>
+      <router-link to="/role-request" class="nav-item">
+        <div class="nav-item-icon">
+          <v-icon icon="fa:fas fa-person-circle-check"></v-icon>
+        </div>
+        <div class="nav-item-text">Yêu cầu cấp quyền</div>
+      </router-link>
       <router-link to="/user" class="nav-item">
         <div class="nav-item-icon">
           <v-icon icon="fa:fas fa-user"></v-icon>
         </div>
         <div class="nav-item-text">Phân quyền</div>
+      </router-link>
+      <router-link to="/order" class="nav-item">
+        <div class="nav-item-icon">
+          <v-icon icon="fa:fas fa-bookmark"></v-icon>
+        </div>
+        <div class="nav-item-text">Đặt phòng</div>
       </router-link>
     </div>
   </div>

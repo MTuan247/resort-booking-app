@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import resortApi from '../common/api/resort';
 import RequiredLogin from '../components/reuse/RequiredLogin';
+import NoData from '../components/reuse/NoData';
 
 export default function FavoriteScreen({ navigation }) {
 
@@ -52,6 +53,11 @@ export default function FavoriteScreen({ navigation }) {
           })
         }
       </ScrollView>
+      {
+        items.length ? (<></>) : (
+          <NoData />
+        )
+      }
     </Box>
   )
 }

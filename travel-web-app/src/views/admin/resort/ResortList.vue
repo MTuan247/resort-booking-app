@@ -79,7 +79,7 @@ export default {
       {
         title: "#",
         fieldName: "Tree",
-        style: "width: 40px;",
+        style: "width: 60px;",
         align: "center",
       },
       {

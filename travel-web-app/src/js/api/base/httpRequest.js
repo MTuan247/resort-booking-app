@@ -21,7 +21,7 @@ httpRequest.send = (url, data, config = { method: "post" },) => {
   console.log(`url: ${customUrl}`)
 
   let headers = {
-    // 'Authorization': state.context.user?.token
+    'Authorization': 'Bearer ' + localStorage.getItem("token")
   }
 
   return new Promise((resolve, reject) => {

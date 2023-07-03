@@ -23,6 +23,9 @@ module.exports = (sequelize, Sequelize) => {
     role_id: {
       type: Sequelize.UUID
     },
+    in_request: {
+      type: Sequelize.BOOLEAN
+    },
   });
 
   return User;

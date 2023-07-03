@@ -122,8 +122,14 @@ export default function PaymentScreen({ route }) {
             <VStack flex={3}>
               <Heading numberOfLines={1} fontSize={14}>{param.resort?.title}</Heading>
               <VStack borderLeftWidth={2} borderLeftColor={global.theme.COLORS.GRAY} marginTop={4} paddingLeft={2}>
-                <Heading fontSize={12}>{param.room?.title}</Heading>
-                <Text marginTop={2}>{param.room?.description}</Text>
+                {
+                  param.room.type == 0 ? (<></>) : (
+                    <Heading fontSize={12}>{param.room?.title}</Heading>
+                  )
+                }
+                <ScrollView>
+                  <Text marginTop={2}>{param.room?.description}</Text>
+                </ScrollView>
               </VStack>
             </VStack>
             <Image marginLeft={4} borderRadius={8} flex={1} resizeMethod='scale' alt={param.room.title} source={{

@@ -7,6 +7,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import resortApi from '../common/api/resort';
 import { useSelector, useDispatch } from 'react-redux';
 import RequiredLogin from '../components/reuse/RequiredLogin';
+import NoData from '../components/reuse/NoData';
 
 export default function OrderScreen({ navigation }) {
 
@@ -51,6 +52,11 @@ export default function OrderScreen({ navigation }) {
           })
         }
       </ScrollView>
+      {
+        items.length ? (<></>) : (
+          <NoData />
+        )
+      }
     </Box>
   )
 }
