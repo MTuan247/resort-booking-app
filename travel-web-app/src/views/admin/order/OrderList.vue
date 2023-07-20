@@ -26,7 +26,7 @@
         <template v-slot:content>
           <div class="resort-status">
             <div class="resort-status-date-picker">
-              <VueDatePicker @update:model-value="handleDatePick" v-model="selectedDate" inline text-input
+              <VueDatePicker :enable-time-picker="false" @update:model-value="handleDatePick" v-model="selectedDate" inline text-input
                 inline-with-input auto-apply />
             </div>
             <div class="resort-status-list">

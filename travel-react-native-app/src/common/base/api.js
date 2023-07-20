@@ -41,4 +41,14 @@ export default class BaseApi {
     return await httpRequest.post(url, payload);
   }
 
+  /**
+   * Gọi api post
+   * @returns 
+   */
+  async post(payload) {
+    const url = this.api() + '/';
+
+    return await httpRequest.post(url, payload);
+  }
+
 }

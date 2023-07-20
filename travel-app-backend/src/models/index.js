@@ -28,6 +28,7 @@ db.favourites = require("./favourite.model.js")(sequelize, Sequelize);
 db.schedules = require("./schedule.model.js")(sequelize, Sequelize);
 db.orders = require("./order.model.js")(sequelize, Sequelize);
 db.roles = require("./role.model.js")(sequelize, Sequelize);
+db.comments = require("./comment.model.js")(sequelize, Sequelize);
 
 // Config associations
 db.resorts.hasMany(db.articles, {
@@ -71,6 +72,26 @@ db.users.belongsTo(db.roles, {
 
 db.users.belongsToMany(db.resorts, { through: db.favourites, foreignKey: "user_id", });
 db.resorts.belongsToMany(db.users, { through: db.favourites, foreignKey: "resort_id" });
+
+db.resorts.hasMany(db.comments, {
+  foreignKey: 'resort_id',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE'
+});
+
+db.comments.belongsTo(db.resorts, {
+  foreignKey: 'resort_id',
+});
+
+db.users.hasMany(db.comments, {
+  foreignKey: 'user_id',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE'
+});
+
+db.comments.belongsTo(db.users, {
+  foreignKey: 'user_id',
+});
 
 // db.users.hasMany(db.orders, {
 //   foreignKey: 'user_id',

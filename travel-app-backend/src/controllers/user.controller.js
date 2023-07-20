@@ -1,3 +1,4 @@
+const avatarConfig = require("../config/avatar.config");
 const db = require("../models");
 const BaseController = require("./base.controller");
 const UserModel = db.users;
@@ -37,6 +38,7 @@ class UserController extends BaseController {
       user.role_id = role.role_id;
       user.role = role.role;
     }
+    user.image = avatarConfig.genUrl(user.name);
     return await this.insert(user)
   }
 
@@ -49,6 +51,7 @@ class UserController extends BaseController {
         for (let item of data) {
           item.role = item['role.role']
           item.role_title = item['role.role_title']
+          item.password = null
         }
         res.send(data);
       })

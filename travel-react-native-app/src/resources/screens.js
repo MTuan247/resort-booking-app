@@ -17,6 +17,8 @@ const screens = {
     DETAIL: 'DetailScreen',
     IMAGE: 'ImageScreen',
     PAYMENT: 'PaymentScreen',
+    COMMENT: 'CommentScreen',
+    FEEDBACK: 'FeedbackScreen',
   }
 }
 

@@ -11,6 +11,7 @@ import { Constants, Enums } from '@/resources/index.js';
 
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import "@hennge/vue3-pagination/dist/vue3-pagination.css";
 
 export const registerPlugin = (app) => {
 

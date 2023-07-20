@@ -14,6 +14,8 @@ import ResortScreen from '../screens/Resort';
 import DetailScreen from '../screens/Detail';
 import ImageArticle from '../screens/ImageArticle';
 import PaymentScreen from '../screens/Payment';
+import CommentScreen from '../screens/Comment';
+import FeedbackScreen from '../screens/Feedback';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -117,6 +119,40 @@ const paymentOptions = ({ route }) => ({
   headerTitleAlign: 'center'
 })
 
+/**
+ * Config cho trang comment
+ */
+const commentOptions = ({ route }) => ({
+  headerTitle: 'Đánh giá',
+  headerTintColor: global.theme.COLORS.BLACK,
+  headerStyle: {
+  },
+  headerShown: true,
+  headerTitleAlign: 'center'
+});
+
+/**
+ * Config cho trang default
+ */
+const defaultOptions = ({ route }) => ({
+  headerTitle: route.params?.title,
+  headerTintColor: global.theme.COLORS.BLACK,
+  headerStyle: {
+  },
+  headerShown: true,
+  headerTitleAlign: 'center'
+});
+
+/**
+ * Config cho trang Viết đánh giá 
+ */
+const feedbackOptions = ({ route }) => {
+  return {
+    ...defaultOptions({ route }),
+    headerTitle: 'Viết đánh giá'
+  }
+}
+
 
 /**
  * Điều hướng
@@ -136,6 +172,8 @@ export default function Navigation(props) {
       <Stack.Screen options={resortOptions} name={screens.SCREEN.RESORT} component={ResortScreen} />
       <Stack.Screen options={detailOptions} name={screens.SCREEN.DETAIL} component={DetailScreen} />
       <Stack.Screen options={paymentOptions} name={screens.SCREEN.PAYMENT} component={PaymentScreen} />
+      <Stack.Screen options={commentOptions} name={screens.SCREEN.COMMENT} component={CommentScreen} />
+      <Stack.Screen options={feedbackOptions} name={screens.SCREEN.FEEDBACK} component={FeedbackScreen} />
     </Stack.Navigator>
   );
 }

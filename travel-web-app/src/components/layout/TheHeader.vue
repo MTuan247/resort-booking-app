@@ -18,11 +18,15 @@
         <v-menu v-if="status.loggedIn" class="account">
           <template v-slot:activator="{ props }">
             <v-avatar class="pointer" v-bind="props" color="info">
-              <v-icon icon="mdi-account-circle"></v-icon>
+              <v-img v-if="user.avatar" alt="Avatar" :src="user.avatar"></v-img>
+              <v-icon v-else icon="mdi-account-circle"></v-icon>
             </v-avatar>
           </template>
           <v-list>
             <v-list-item :value="0" class="pointer account-dropdown-item">
+              <v-list-item-title>{{ user.name }}</v-list-item-title>
+            </v-list-item>
+            <v-list-item :value="1" class="pointer account-dropdown-item">
               <v-list-item-title @click="handleLogout">Đăng xuất</v-list-item-title>
             </v-list-item>
           </v-list>

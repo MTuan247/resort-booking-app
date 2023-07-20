@@ -1,8 +1,8 @@
 import { Avatar, Box, Pressable, Divider, HStack, Heading, Image, ScrollView, Text, VStack, ZStack, Button } from 'native-base';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Alert } from 'react-native';
+import { StyleSheet, Alert, Platform, NativeModules, SafeAreaView } from 'react-native';
 import { Icon } from 'native-base';
-import { Ionicons } from 'react-native-vector-icons';
+import { Ionicons, FontAwesome5, EvilIcons } from 'react-native-vector-icons';
 import { Dimensions } from 'react-native';
 import screens from '../resources/screens';
 
@@ -13,6 +13,7 @@ import { useToast } from 'native-base';
 import BaseButton from '../components/base/BaseButton';
 
 const windowHeight = Dimensions.get('window').height;
+const { StatusBarManager } = NativeModules;
 
 export default function ResortScreen({ route, navigation }) {
 
@@ -59,7 +60,7 @@ export default function ResortScreen({ route, navigation }) {
    */
   const showBookAlert = () =>
     Alert.alert('Thông báo', 'Vui lòng đăng nhập để có thể đặt phòng trực tuyến!', [
-      {text: 'Đồng ý', onPress: () => console.log('OK Pressed')},
+      { text: 'Đồng ý', onPress: () => console.log('OK Pressed') },
     ]);
 
   /**
@@ -69,7 +70,7 @@ export default function ResortScreen({ route, navigation }) {
     navigation.navigate(screens.SCREEN.IMAGE, { item: item })
   }
 
-  
+
   /**
    * Xem thanh toán
    */
@@ -78,21 +79,32 @@ export default function ResortScreen({ route, navigation }) {
       showBookAlert();
       return;
     }
-    navigation.navigate(screens.SCREEN.PAYMENT, { resort: item, room: detail })
+    navigation.push(screens.SCREEN.PAYMENT, { resort: param.resort || item, room: detail })
   }
 
-  
+  /**
+   * Xem phản hồi
+   */
+  const showComment = () => {
+    navigation.push(screens.SCREEN.COMMENT, { item: item })
+  }
+
+
   /**
    * Xem phòng chi tiết
    * @param {*} detail 
    */
   const showDetail = (detail) => {
-    navigation.navigate(screens.SCREEN.DETAIL, { item: detail, title: item.title, resort: item })
+    // navigation.navigate(screens.SCREEN.DETAIL, { item: detail, title: item.title, resort: item })
+    navigation.push(screens.SCREEN.RESORT, { item: detail, title: item.title, resort: item })
   }
 
   return (
     <>
-      <Box style={styles.container}>
+      <SafeAreaView style={{
+        flex: 1,
+        paddingTop: Platform.OS === 'android' ? StatusBarManager.HEIGHT : 0,
+      }}>
         <ScrollView>
 
           <Image source={{
@@ -101,22 +113,46 @@ export default function ResortScreen({ route, navigation }) {
 
           <VStack margin={4}>
             <Heading lineHeight={24} fontWeight={600} fontSize={20}>{item.title}</Heading>
-            <HStack paddingTop={1} alignItems={"center"}>
-              <HStack marginRight={4} flex={1} alignItems={"center"}>
-                <Icon as={Ionicons} name={"location-sharp"} size={5} color={global.theme.COLORS.PRIMARY} />
-                <Text marginLeft={1} fontSize={15} color={global.theme.COLORS.GRAY} fontWeight={600}>{item.address}</Text>
-              </HStack>
-              <Pressable onPress={() => like()}>
-                {
-                  isLiked ? (
-                    <Icon as={Ionicons} name={"heart"} size={6} color={global.theme.COLORS.PRIMARY} />
-                  ) : (
-                    <Icon as={Ionicons} name={"heart-outline"} size={6} color={global.theme.COLORS.PRIMARY} />
-                  )
-                }
-              
-              </Pressable>
-            </HStack>
+            {
+              item.parent_id == null ? (
+                <HStack paddingTop={1} alignItems={"center"}>
+                  <HStack marginRight={4} flex={1} alignItems={"center"}>
+                    <Icon as={Ionicons} name={"location-sharp"} size={5} color={global.theme.COLORS.PRIMARY} />
+                    <Text marginLeft={1} fontSize={15} color={global.theme.COLORS.GRAY} fontWeight={600}>{item.address}</Text>
+                  </HStack>
+                  <Pressable onPress={() => like()}>
+                    {
+                      isLiked ? (
+                        <Icon as={Ionicons} name={"heart"} size={6} color={global.theme.COLORS.PRIMARY} />
+                      ) : (
+                        <Icon as={Ionicons} name={"heart-outline"} size={6} color={global.theme.COLORS.PRIMARY} />
+                      )
+                    }
+
+                  </Pressable>
+                </HStack>
+              ) : (
+                <></>
+              )
+            }
+            {
+              item.parent_id == null && (
+                <HStack paddingTop={2} alignItems={"center"}>
+                  <HStack borderRadius={8} backgroundColor={global.theme.COLORS.PRIMARY} alignItems={"center"}>
+                    <Icon color={global.theme.COLORS.WHITE} m={1} size={4} as={FontAwesome5} name='umbrella-beach'></Icon>
+                    <Text color={global.theme.COLORS.WHITE} p={1}>9.2</Text>
+                  </HStack>
+                  <Text ml={1}>Tuyệt vời</Text>
+                  <Text ml={1} color={global.theme.COLORS.GRAY}>(179 đánh giá)</Text>
+                  <Pressable onPress={() => showComment()} flex={1}>
+                    <HStack justifyContent={'flex-end'} alignItems={'center'}>
+                      <Text color={global.theme.COLORS.PRIMARY}>Xem đánh giá</Text>
+                      <Icon color={global.theme.COLORS.PRIMARY} as={EvilIcons} size={8} name='chevron-right'></Icon>
+                    </HStack>
+                  </Pressable>
+                </HStack>
+              )
+            }
           </VStack>
           <Divider _light={{ bg: global.theme.COLORS.BORDER }} />
           <Box paddingX={4} paddingY={2}>
@@ -176,7 +212,7 @@ export default function ResortScreen({ route, navigation }) {
             ) : (<></>)
           }
           {
-            param.item?.order && (
+            item?.order && (
               <Box marginTop={4}>
                 <Text fontWeight={600} fontSize={18} textTransform={"uppercase"}>Thông tin đặt phòng</Text>
                 <Text fontWeight={500} fontSize={14}>Trạng thái: {param.item.order?.status ? 'Đặt phòng thành công' : 'Đang xử lý'}</Text>
@@ -187,7 +223,7 @@ export default function ResortScreen({ route, navigation }) {
           }
         </ScrollView>
         {
-          item?.order ? (
+          item?.details?.length || item?.order ? (
             <></>
           ) : (
             <HStack justifyContent={"space-between"} paddingX={6} alignItems={"center"} borderTopRadius={40} height={windowHeight * 0.1} backgroundColor={global.theme.COLORS.DARKGRAY}>
@@ -201,13 +237,11 @@ export default function ResortScreen({ route, navigation }) {
             </HStack>
           )
         }
-      </Box>
+      </SafeAreaView>
     </>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
+
 });

@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 
-const appMiddleware = require("./src/middleware");
+const {appMiddleware, afterMiddleware} = require("./src/middleware");
 const db = require("./src/models");
 
 const app = express();
@@ -21,8 +21,6 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-appMiddleware(app);
-
 db.sequelize.sync({ alter: true })
   .then(() => {
     console.log("Synced db.");
@@ -30,6 +28,9 @@ db.sequelize.sync({ alter: true })
   .catch((err) => {
     console.log("Failed to sync db: " + err.message);
   });
+
+
+appMiddleware(app);
 
 // simple route
 app.get("/", (req, res) => {
@@ -40,8 +41,11 @@ require("./src/routes/resort.route")(app);
 require("./src/routes/location.route")(app);
 require("./src/routes/user.route")(app);
 require("./src/routes/order.route")(app);
+require("./src/routes/feedback.route")(app);
 require("./src/auth/auth.route")(app);
 require("./src/payment/payment.route")(app);
+
+afterMiddleware(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 5678;

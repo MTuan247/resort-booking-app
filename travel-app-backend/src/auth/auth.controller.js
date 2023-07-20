@@ -83,6 +83,8 @@ exports.login = async (req, res) => {
 	// 	refreshToken = user.refreshToken;
 	// }
 
+	user.password = null;
+
 	return res.json({
 		msg: 'Đăng nhập thành công.',
 		accessToken,

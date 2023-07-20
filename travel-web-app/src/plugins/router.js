@@ -6,6 +6,7 @@ import store from '@/store/index.js';
 import ResortList from '@/views/admin/resort/ResortList.vue';
 import UserList from '@/views/admin/user/UserList.vue';
 import OrderList from '@/views/admin/order/OrderList.vue';
+import FeedbackList from '@/views/admin/feedback/FeedbackList.vue';
 import Login from '@/views/auth/Login.vue';
 import RoleRequestList from '@/views/admin/role_request/RoleRequestList.vue'
 
@@ -34,6 +35,11 @@ const routes = [
         path: 'order',
         name: 'order',
         component: OrderList,
+      },
+      {
+        path: 'feedback',
+        name: 'feedback',
+        component: FeedbackList,
       },
       {
         path: '',

@@ -30,6 +30,12 @@
         </div>
         <div class="nav-item-text">Đặt phòng</div>
       </router-link>
+      <router-link to="/feedback" class="nav-item">
+        <div class="nav-item-icon">
+          <v-icon icon="fa:fas fa-message"></v-icon>
+        </div>
+        <div class="nav-item-text">Đánh giá</div>
+      </router-link>
     </div>
   </div>
 </template>

@@ -26,6 +26,9 @@ module.exports = (sequelize, Sequelize) => {
     in_request: {
       type: Sequelize.BOOLEAN
     },
+    avatar: {
+      type: Sequelize.TEXT
+    },
   });
 
   return User;
