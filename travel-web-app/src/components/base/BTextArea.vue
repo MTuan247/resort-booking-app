@@ -88,6 +88,6 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 @import "@/scss/base/input.scss";
 </style>

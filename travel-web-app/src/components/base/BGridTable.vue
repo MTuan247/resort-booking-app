@@ -187,6 +187,6 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import url("@/scss/base/grid.scss");
+<style lang="scss" scoped>
+@import "@/scss/base/grid.scss";
 </style>

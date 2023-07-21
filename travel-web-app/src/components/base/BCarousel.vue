@@ -27,6 +27,6 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 @import "@/scss/base/carousel.scss";
 </style>

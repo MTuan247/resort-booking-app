@@ -117,7 +117,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/scss/base/popup.scss";
 .login-form {
   height: 65vh;
   width: 25%;

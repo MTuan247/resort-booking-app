@@ -76,7 +76,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/scss/base/popup.scss";
 .contact-popup {
   height: 50vh;
   width: 40%;

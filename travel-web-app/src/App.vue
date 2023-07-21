@@ -30,5 +30,11 @@ export default {
 </script>
 
 <style lang="scss">
+@import 'bootstrap/scss/bootstrap.scss';
+@import "vue-toastification/dist/index.css";
+@import '@/scss/common/_variables.scss';
+@import '@/scss/common/common-style.scss';
+@import "@/scss/base/popup.scss";
+
 @import "@/scss/main.scss";
 </style>

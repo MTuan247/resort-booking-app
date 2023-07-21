@@ -355,7 +355,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/scss/base/popup.scss";
 .resort-detail {
   height: 95vh;
   .article-detail {

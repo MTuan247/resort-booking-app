@@ -112,7 +112,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/scss/base/popup.scss";
 .user-detail {
   height: 100vh;
   max-height: 100vh !important;
