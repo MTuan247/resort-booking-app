@@ -18,6 +18,10 @@ body {
   display: flex;
   flex-direction: column;
 
+  .v-breadcrumbs {
+    margin-bottom: 0px;
+  }
+
   /* width */
   ::-webkit-scrollbar {
     width: 8px;

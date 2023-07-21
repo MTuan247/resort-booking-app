@@ -4,6 +4,7 @@
   height: 100%;
   overflow-x: auto;
   overflow-y: auto;
+  border: 1px solid #ddd;
 }
 
 .grid::-webkit-scrollbar-track {
@@ -31,7 +32,7 @@
   z-index: 1;
   text-align: left;
   cursor: pointer;
-  border-right: 1px dashed #aaa;
+  // border-right: 1px dashed #aaa;
 }
 
 .grid th:hover {
@@ -41,7 +42,7 @@
 .grid td {
   color: #222222;
   font-family: GoogleSans-Light;
-  border-right: 1px dashed #aaa;
+  // border-right: 1px dashed #aaa;
 }
 
 .grid .text-align-center {
