@@ -1,6 +1,7 @@
 const db = require("../models");
 const BaseController = require("./base.controller");
 const articleController = require("./article.controller");
+const feedbackController = require("./feedback.controller");
 const { getImageLink } = require('../services/storage.service')
 const ResortModel = db.resorts;
 const ArticleModel = db.articles;
@@ -84,6 +85,20 @@ class ResortController extends BaseController {
           masterData.liked = true;
         }
 
+        let order = await db.orders.findOne({
+          where: {
+            user_id: context.user_id,
+            resort_id: masterData.resort_id,
+            to_date: {
+              [Op.gte]: new Date()
+            }
+          }
+        });
+
+        if (order) {
+          masterData.order = order;
+        }
+
         for (let item of details) {
           let order = await db.orders.findOne({
             where: {
@@ -103,6 +118,9 @@ class ResortController extends BaseController {
 
       masterData.articles = articles;
       masterData.details = details;
+      if (!masterData.parent_id) {
+        masterData.feedback = await feedbackController.getFeedbackInfo(masterData.resort_id, 0, 0);
+      }
 
       res.send(masterData);
 
@@ -167,6 +185,10 @@ class ResortController extends BaseController {
     let dateRange = req.body.dateRange;
     let location = req.body.location;
     let numberOfPeople = req.body.numberOfPeople;
+    let limit = req.body.limit;
+    let offset = req.body.offset;
+    let sort = req.body.sort || 'rate';
+    let order = req.body.sort || 'DESC';
 
     let from_date = dateRange?.firstDate;
     let to_date = dateRange?.secondDate;
@@ -188,27 +210,40 @@ class ResortController extends BaseController {
     }
 
     if (location) {
-      where.location = {
-        [Op.like]: `%${location || ''}%`,
+      // where.location = {
+      //   [Op.like]: `%${location || ''}%`,
+      // }
+      where[Op.or] = {
+        location: {
+          [Op.like]: `%${location || ''}%`,
+        },
+        title: {
+          [Op.like]: `%${location || ''}%`,
+        },
       }
     }
 
     try {
       if (dateRange) {
-        // Tìm các lịch bị trùng
-        let scheduleQuery = `SELECT * FROM schedules s 
-          WHERE (:from_date BETWEEN s.from_date AND s.to_date) 
-          OR (:to_date BETWEEN s.from_date AND s.to_date)
-          OR (:from_date < s.from_date AND :to_date > s.to_date);`;
+        // Tìm các phòng còn trống
+        let sql = `SELECT
+          r.*
+        FROM resorts r
+          LEFT JOIN schedules s
+            ON r.resort_id = s.resort_id
+        WHERE (s.from_date <= :to_date OR :to_date IS NULL)
+        AND (s.to_date >= :from_date OR :from_date IS NULL)
+        GROUP BY r.resort_id
+        HAVING COUNT(r.resort_id) >= r.quantity;`;
 
-        let schedules = await db.sequelize.query(scheduleQuery, {
+        let fullRooms = await db.sequelize.query(sql, {
           replacements: { from_date: from_date, to_date: to_date },
           type: db.sequelize.QueryTypes.SELECT
         });
 
         // Nếu có lịch trùng thì loại bỏ resort đó đi
-        if (schedules.length) {
-          let ids = schedules.map(schedule => schedule.resort_id);
+        if (fullRooms.length) {
+          let ids = fullRooms.map(item => item.resort_id);
           where.resort_id = {
             [Op.notIn]: ids
           }
@@ -252,9 +287,24 @@ class ResortController extends BaseController {
       // Lấy danh sách resort bỏ qua các resort bị trùng lịch
       let resorts = await this.Model.findAll({
         where: where,
+        include: [{
+          model: db.comments,
+          as: 'comments',
+          required: false,
+          attributes: [],
+        }],
+        attributes: {
+          include: [
+            [db.sequelize.fn('AVG', db.sequelize.col('score')), 'rate']
+          ]
+        },
+        order: [
+          [sort, order]
+        ],
+        group: ['resort_id'],
       });
 
-      res.send(resorts);
+      res.send(resorts.slice(offset, offset + limit));
 
     } catch (err) {
       res.status(500).send({
@@ -341,21 +391,33 @@ class ResortController extends BaseController {
 
     let user_id = context.user_id;
 
-    let sql = `SELECT r.* FROM resorts r INNER JOIN orders f ON r.resort_id = f.resort_id WHERE f.user_id = ? AND f.to_date >= ?;`;
+    let sql = `SELECT r.*, f.from_date, f.to_date, f.cost FROM resorts r INNER JOIN orders f ON r.resort_id = f.resort_id WHERE f.user_id = ? AND f.to_date >= ?;`;
 
     try {
       let data = await db.sequelize.query(sql,
-        { replacements: [user_id, new Date()], type: db.sequelize.QueryTypes.SELECT });
+        { raw: true, replacements: [user_id, new Date()], type: db.sequelize.QueryTypes.SELECT });
 
       if (data.length) {
-        let resortIds = data.map(x => x.parent_id);
-        data = await this.Model.findAll({
-          where: {
-            resort_id: {
-              [Op.in]: resortIds
-            }
+        // let resortIds = data.map(x => x.parent_id);
+        // data = await this.Model.findAll({
+        //   where: {
+        //     resort_id: {
+        //       [Op.in]: resortIds
+        //     }
+        //   }
+        // });
+        for (const item of data) {
+          let parent_id = item.parent_id;
+          if (parent_id) {
+            let parent = await db.resorts.findOne({
+              raw: true,
+              where: {
+                resort_id: parent_id
+              },
+            });
+            item.parent = parent;
           }
-        });
+        }
       }
       res.send(data);
     } catch (error) {
@@ -379,6 +441,9 @@ class ResortController extends BaseController {
     let resort_id = req.body.resort_id;
     let from_date = req.body.from_date;
     let to_date = req.body.to_date;
+    let email = req.body.email;
+    let tel = req.body.tel;
+    let cost = req.body.cost;
     try {
       db.schedules.create({
         resort_id: resort_id,
@@ -390,7 +455,10 @@ class ResortController extends BaseController {
         user_id: user_id,
         resort_id: resort_id,
         from_date: from_date,
+        email: email,
+        tel: tel,
         to_date: to_date,
+        cost: cost,
         status: OrderStatus.Accept
       }).then((data) => {
         res.send(data);
@@ -476,6 +544,9 @@ class ResortController extends BaseController {
   // Suggestion
   async suggestion(req, res) {
     let context = req.context;
+    let sort = 'rate';
+    let order = 'DESC';
+
     let where = {
       parent_id: {
         [Op.is]: null
@@ -493,11 +564,29 @@ class ResortController extends BaseController {
       // Lấy danh sách resort
       let resorts = await this.Model.findAll({
         where: where,
-        include: [{ model: db.users, where: joinedWhere, required: false }],
-        limit: 5
+        include: [
+          {
+            model: db.comments,
+            as: 'comments',
+            required: false,
+            attributes: [],
+          },
+          { 
+            model: db.users, where: joinedWhere, required: false 
+          },
+        ],
+        attributes: {
+          include: [
+            [db.sequelize.fn('AVG', db.sequelize.col('comments.score')), 'rate']
+          ]
+        },
+        order: [
+          [sort, order]
+        ],
+        group: ['resort_id'],
       });
 
-      res.send(resorts);
+      res.send(resorts.slice(0, 5));
 
     } catch (err) {
       res.status(500).send({

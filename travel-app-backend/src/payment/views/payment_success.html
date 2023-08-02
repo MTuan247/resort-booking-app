@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment</title>
+  <!-- <link rel="stylesheet" href="payment_styles.css"> -->
+  <style>
+    .payment-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .payment-container .ok {
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 16px;
+    }
+
+    .payment-container.error .title {
+      color: #f00;
+    }
+
+    .payment-container.error .ok {
+      background-color: #f00;
+    }
+
+    .payment-container.success .title {
+      color: #4CBB17;
+    }
+
+    .payment-container.success .ok {
+      background-color: #4CBB17;
+    }
+  </style>
+</head>
+<body>
+  <div class="payment-container success">
+    <h1 class="title">Thanh toán thành công</h1> 
+    <button class="ok" onclick="success()">Xác nhận</button>
+  </div>
+</body>
+<script>
+  function success() {
+    window.ReactNativeWebView?.postMessage("success")
+  }
+</script>
+</html>

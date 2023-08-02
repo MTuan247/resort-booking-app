@@ -93,23 +93,35 @@ db.comments.belongsTo(db.users, {
   foreignKey: 'user_id',
 });
 
-// db.users.hasMany(db.orders, {
-//   foreignKey: 'user_id',
-//   onDelete: 'CASCADE',
-//   onUpdate: 'NO ACTION'
-// });
-// db.orders.belongsTo(db.users, {
-//   foreignKey: 'user_id',
-// });
+db.users.hasMany(db.orders, {
+  foreignKey: 'user_id',
+  onDelete: 'CASCADE',
+  onUpdate: 'NO ACTION'
+});
+db.orders.belongsTo(db.users, {
+  foreignKey: 'user_id',
+});
 
-// db.resorts.hasMany(db.orders, {
-//   foreignKey: 'resort_id',
-//   onDelete: 'CASCADE',
-//   onUpdate: 'NO ACTION'
-// });
-// db.resorts.belongsTo(db.users, {
-//   foreignKey: 'resort_id',
-// });
+db.resorts.hasMany(db.orders, {
+  foreignKey: 'resort_id',
+  onDelete: 'CASCADE',
+  onUpdate: 'NO ACTION'
+});
+db.orders.belongsTo(db.resorts, {
+  foreignKey: 'resort_id',
+});
+
+db.locations.hasMany(db.resorts, {
+  foreignKey: 'location_id',
+  as: 'fk_location_resort',
+  onDelete: 'SET NULL',
+  onUpdate: 'NO ACTION'
+});
+
+db.resorts.belongsTo(db.locations, {
+  foreignKey: 'location_id',
+  as: 'fk_resort_location',
+});
 
 // db.users.belongsToMany(db.resorts, { through: db.orders, foreignKey: "user_id", uniqueKey: 'order_id' });
 // db.resorts.belongsToMany(db.users, { through: db.orders, foreignKey: "resort_id", uniqueKey: 'order_id' });

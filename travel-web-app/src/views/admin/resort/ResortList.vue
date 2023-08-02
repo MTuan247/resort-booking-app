@@ -28,8 +28,10 @@
         parentField="parent_id"
       >
         <template #action="{ row }">
-          <v-icon icon="mdi-pencil-outline" @click="editRow(row)"></v-icon>
-          <v-icon icon="mdi-delete-outline" @click="deleteRow(row)"></v-icon>
+          <div class="table-action">
+            <v-icon title="Sửa" color="#1196dd" icon="mdi-pencil-outline" @click="editRow(row)"></v-icon>
+            <v-icon title="Xóa" color="#ef0107" icon="mdi-delete-outline" @click="deleteRow(row)"></v-icon>
+          </div>
         </template>
       </b-grid-table>
     </div>
@@ -85,22 +87,22 @@ export default {
       {
         title: "Tên khu nghỉ dưỡng",
         fieldName: "title",
-        style: "width: 200px;",
+        // style: "width: 200px;",
       },
       {
         title: "Tỉnh/thành phố",
         fieldName: "location",
-        style: "width: 80px;",
+        style: "width: 200px;",
       },
       {
         title: "Giá cả",
         fieldName: "cost",
-        style: "width: 100px;",
+        style: "width: 200px;",
       },
       {
         title: "",
         fieldName: "Action",
-        style: "width: 80px;",
+        style: "width: 100px;",
       },
     ]);
 
@@ -120,6 +122,11 @@ export default {
   .resort-main {
     display: flex;
     flex-direction: column;
+
+    .table-action {
+      display: flex;
+      justify-content: space-evenly;
+    }
   }
 }
 </style>

@@ -14,6 +14,9 @@ module.exports = (sequelize, Sequelize) => {
     title: {
       type: Sequelize.STRING
     },
+    location_id: {
+      type: Sequelize.UUID,
+    },
     location: {
       type: Sequelize.STRING
     },
@@ -46,7 +49,8 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER
     },
     max_people: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      defaultValue: 1
     },
     user_id: {
       type: Sequelize.UUID,

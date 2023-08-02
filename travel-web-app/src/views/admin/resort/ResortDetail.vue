@@ -36,7 +36,7 @@
               v-model="model.description"
               label="Mô tả"
             ></b-text-area>
-            <div v-if="model.type == $enums.ResortType.Resort" class="d-flex mt-2">
+            <div v-if="!model.parent_id" class="d-flex mt-2">
               <b-input
                 class="mr-2"
                 v-model="model.from_cost"
@@ -55,6 +55,13 @@
                 v-model="model.from_cost"
                 type="number"
                 label="Giá"
+              ></b-input>
+            </div>
+            <div class="d-flex mt-2">
+              <b-input
+                v-model="model.max_people"
+                type="number"
+                label="Số người"
               ></b-input>
             </div>
             <!-- <div class="d-flex mt-2">
@@ -298,6 +305,7 @@ export default {
       let res = {};
       
       model.value.articles = articles.value;
+      model.value.max_peple = model.value.max_peple || 1;
       let newId = proxy.$uuid.v1();
       let coverImageLst = coverImages.value.filter((x) => x.state == proxy.$enums.ModelState.Add);
       if (coverImageLst.length && coverImageLst[0].state == proxy.$enums.ModelState.Add) {

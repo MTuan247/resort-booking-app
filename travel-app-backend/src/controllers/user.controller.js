@@ -81,13 +81,41 @@ class UserController extends BaseController {
   }
 
 
-  // Cấp quyền tài khoản
+  /**
+   * Cấp quyền tài khoản
+   * @param {*} req 
+   * @param {*} res 
+   */
   async approve(req, res) {
 
     let user_id = req.body.user_id;
 
     try {
       let sql = `UPDATE users u LEFT JOIN roles r ON r.role = 'resort_owner' SET u.in_request = FALSE, u.role_id = r.role_id WHERE u.user_id = :user_id;`;
+
+      await db.sequelize.query(sql, {
+        replacements: { user_id },
+      });
+
+      res.send(true);
+    } catch (error) {
+      res.status(500).send({
+        message: "Error updating Model with id=" + id
+      });
+    }
+  }
+
+  /**
+   * Hủy bỏ cấp quyền tài khoản
+   * @param {*} req 
+   * @param {*} res 
+   */
+  async reject(req, res) {
+
+    let user_id = req.body.user_id;
+
+    try {
+      let sql = `UPDATE users u SET u.in_request = FALSE WHERE u.user_id = :user_id;`;
 
       await db.sequelize.query(sql, {
         replacements: { user_id },

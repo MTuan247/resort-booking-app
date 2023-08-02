@@ -1,6 +1,6 @@
 import { Box, FlatList, HStack, Heading, Icon, Pressable, Progress, ScrollView, Skeleton, Text, VStack } from 'native-base';
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux'
 
 import screens from '../resources/screens';
@@ -16,6 +16,8 @@ import commentApi from '../common/api/comment';
 export default function CommentScreen({ route }) {
 
   const dispatch = useDispatch();
+  const context = useSelector((state) => state.context);
+  // const toast = useToast();
 
   const [feedback, setFeedback] = useState({
     comments: [],
@@ -28,6 +30,7 @@ export default function CommentScreen({ route }) {
   const [limit, setLimit] = useState(10);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [noItem, setNoItem] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -55,7 +58,7 @@ export default function CommentScreen({ route }) {
    * Load thêm dữ liệu
    */
   const loadMore = async () => {
-    if (loading) {
+    if (loading || noItem) {
       return null;
     }
 
@@ -102,6 +105,10 @@ export default function CommentScreen({ route }) {
 
     setLoading(false);
 
+    if (more.length == 0) {
+      setNoItem(true);
+    }
+
     return data;
   }
 
@@ -110,6 +117,12 @@ export default function CommentScreen({ route }) {
   const param = route.params;
 
   const postFeedback = () => {
+    if (!context.loggedIn) {
+      Alert.alert('Thông báo', 'Vui lòng đăng nhập để có thể sử dụng chức năng này!', [
+        { text: 'Đồng ý', onPress: () => console.log('OK Pressed') },
+      ]);
+      return;
+    }
     navigation.push(screens.SCREEN.FEEDBACK, {item: param.item });
   }
 
@@ -147,6 +160,10 @@ export default function CommentScreen({ route }) {
    * Render item comment skeleton
    */
   const renderCommentSkeleton = () => {
+    if (!loading) {
+      return <></>
+    }
+
     return (
       <VStack>
         <Skeleton padding={4} h={16} rounded={'md'} />
@@ -188,7 +205,7 @@ export default function CommentScreen({ route }) {
           extraData={comments}
           renderItem={renderComment}
           onEndReached={loadMore}
-          onEndThreshold={3}
+          onEndThreshold={0.1}
           maxToRenderPerBatch={5}
           ListFooterComponent={renderCommentSkeleton}
         />

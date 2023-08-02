@@ -34,6 +34,7 @@ export default {
 @import "vue-toastification/dist/index.css";
 @import '@/scss/common/_variables.scss';
 @import '@/scss/common/common-style.scss';
+@import '@/scss/common/pagination.scss';
 @import "@/scss/base/popup.scss";
 
 @import "@/scss/main.scss";

@@ -13,6 +13,12 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import "@hennge/vue3-pagination/dist/vue3-pagination.css";
 
+// import the package
+import VueAwesomePaginate from "vue-awesome-paginate";
+
+// import the necessary css file
+import "vue-awesome-paginate/dist/style.css";
+
 export const registerPlugin = (app) => {
 
   const emitter = mitt();
@@ -31,6 +37,7 @@ export const registerPlugin = (app) => {
   app.use(vfmPlugin);
   app.use(UUID);
   app.use(Toast, {});
+  app.use(VueAwesomePaginate);
 
   app.component('VueDatePicker', VueDatePicker);
 }

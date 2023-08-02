@@ -37,6 +37,16 @@ class UserApi extends BaseAPI {
     return res;
   }
 
+  /**
+   * Xác nhận
+   * @returns 
+   */
+  async reject(param) {
+    let res = await httpRequest.post(this.getUrl() + 'reject', param);
+
+    return res;
+  }
+
 }
 
 export default new UserApi

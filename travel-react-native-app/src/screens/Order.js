@@ -1,13 +1,13 @@
 import { Box, ScrollView } from 'native-base';
 import React, { useCallback, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import SearchCard from '../components/reuse/SearchCard';
 import screens from '../resources/screens';
 import { useFocusEffect } from '@react-navigation/native';
 import resortApi from '../common/api/resort';
 import { useSelector, useDispatch } from 'react-redux';
 import RequiredLogin from '../components/reuse/RequiredLogin';
 import NoData from '../components/reuse/NoData';
+import OrderCard from '../components/reuse/OrderCard';
 
 export default function OrderScreen({ navigation }) {
 
@@ -47,7 +47,7 @@ export default function OrderScreen({ navigation }) {
         {
           items.map(item => {
             return (
-              <SearchCard key={item.resort_id} {...item} onPress={() => pressItem(item)} />
+              <OrderCard key={item.resort_id} {...item} onPress={() => pressItem(item)} />
             )
           })
         }

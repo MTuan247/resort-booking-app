@@ -1,6 +1,7 @@
+import BaseApi from "../base/api";
 import { httpRequest } from "../base/httpRequest";
 
-class PaymentApi {
+class PaymentApi extends BaseApi {
 
   controller = '/api/payment';
 

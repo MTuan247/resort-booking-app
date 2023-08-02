@@ -14,6 +14,7 @@ module.exports = app => {
 
   // Xác nhận
   router.post("/approve", users.approve.bind(users));
+  router.post("/reject", users.reject.bind(users));
 
   // Retrieve a single user with id
   router.get("/:id", users.findOne.bind(users));

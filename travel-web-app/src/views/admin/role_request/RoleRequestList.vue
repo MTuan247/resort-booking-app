@@ -16,7 +16,10 @@
         :idField="this.keyEntity"
       >
         <template #action="{ row }">
-          <v-icon title="Xác nhận" icon="fa:fas fa-check" @click="approve(row)"></v-icon>
+          <div class="table-action">
+            <v-icon color="#03c04a" title="Xác nhận" icon="fa:fas fa-check" @click="approve(row)"></v-icon>
+            <v-icon color="#ef0107" title="Hủy bỏ" icon="fa:fas fa-x" @click="reject(row)"></v-icon>
+          </div>
         </template>
       </b-grid-table>
     </div>
@@ -68,6 +71,22 @@ export default {
       
     }
 
+    /**
+     * Từ chối cấp quyền tài khoản
+     */
+     const reject = async (user) => {
+      try {
+        await proxy.api.reject({user_id: user.user_id});
+
+        proxy.$toast.success('Từ chối yêu cầu thành công!')
+        proxy.loadData();
+      } catch {
+        proxy.$toast.error('Cấp quyền tài khoản thất bại!')
+
+      }
+      
+    }
+
     const columns = ref([
       {
         title: "Tên tài khoản",
@@ -92,7 +111,7 @@ export default {
       {
         title: "",
         fieldName: "Action",
-        style: "width: 40px;",
+        style: "width: 100px;",
       },
     ]);
 
@@ -102,7 +121,8 @@ export default {
       detailForm,
       keyEntity,
       loadData,
-      approve
+      approve,
+      reject
     };
   },
 };
@@ -113,6 +133,11 @@ export default {
   .user-main {
     display: flex;
     flex-direction: column;
+
+    .table-action {
+      display: flex;
+      justify-content: space-evenly;
+    }
   }
 }
 </style>

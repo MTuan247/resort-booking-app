@@ -4,6 +4,8 @@ import { API_URL } from '../../config/api.js';
 import { store } from '../../redux/store';
 import { formatDate } from '../function/format';
 
+axios.defaults.timeout = 3000;
+
 const httpRequest = {};
 
 httpRequest.getServiceUrl = (action, controller) => {

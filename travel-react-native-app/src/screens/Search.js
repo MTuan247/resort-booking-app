@@ -1,4 +1,4 @@
-import { Box, ScrollView } from 'native-base';
+import { Box, FlatList, ScrollView, Skeleton, VStack } from 'native-base';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux'
@@ -18,6 +18,10 @@ export default function SearchScreen() {
   const dispatch = useDispatch();
 
   const [items, setItems] = useState([]);
+  const [limit, setLimit] = useState(10);
+  const [offset, setOffset] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [noItem, setNoItem] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -41,8 +45,18 @@ export default function SearchScreen() {
    * Load dữ liệu
    */
   const load = async () => {
-    resortApi.search(searchState).then(res => {
-      setItems(res.data);
+    if (loading || noItem) {
+      return;
+    }
+    setLoading(true);
+    resortApi.search({...searchState, limit, offset}).then(res => {
+      let data = [...items, ...res.data];
+      setItems(data);
+      setOffset(data.length);
+      setLoading(false);
+      if (res.data?.length == 0) {
+        setNoItem(true);
+      }
     });
   }
 
@@ -52,12 +66,40 @@ export default function SearchScreen() {
     navigation.navigate(screens.SCREEN.RESORT, { item: item })
   }
 
+  /**
+   * Render item comment skeleton
+   */
+  const renderSkeleton = () => {
+    if (loading) {
+      return (
+        <VStack>
+          <Skeleton padding={4} h={16} rounded={'md'} />
+          <Skeleton.Text padding={4} rounded={'md'} />
+        </VStack>
+      )
+    }
+
+    return (
+      <></>
+    )
+
+  }
+
+  /**
+   * Render data
+   */
+  const renderData = useCallback(({ item }) => {
+    return (
+      <SearchCard {...item} onPress={() => pressItem(item)} />
+    )
+  }, []);
+
   return (
     <Box style={styles.container}>
       {
         searchState.showOnSearch && <SearchBar />
       }
-      <ScrollView>
+      {/* <ScrollView>
         {
           items.map(item => {
             return (
@@ -65,7 +107,19 @@ export default function SearchScreen() {
             )
           })
         }
-      </ScrollView>
+      </ScrollView> */}
+      <VStack flex={1}>
+        <FlatList 
+          data={items}
+          extraData={items}
+          keyExtractor={item => item.resort_id}
+          renderItem={renderData}
+          onEndReached={load}
+          onEndThreshold={0}
+          maxToRenderPerBatch={5}
+          ListFooterComponent={renderSkeleton}
+        />
+      </VStack>
       {
         items.length ? (<></>) : (
           <NoData />

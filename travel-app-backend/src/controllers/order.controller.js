@@ -75,6 +75,12 @@ class OrderController extends BaseController {
     }
   }
 
+  /**
+   * Lấy đơn đặt phòng theo phòng
+   * @param {*} req 
+   * @param {*} res 
+   * @returns 
+   */
   async getResortOrder(req, res) {
     let context = req.context;
 
@@ -128,6 +134,29 @@ class OrderController extends BaseController {
       //   type: db.sequelize.QueryTypes.SELECT
       // });
       // res.send(data);
+    } catch (err) {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Models."
+      });
+    }
+  }
+
+  /**
+   * Kiểm tra tình trạng phòng
+   * @param {*} req 
+   * @param {*} res 
+   */
+  async checkRoomStatus(req, res) {
+
+    var from_date = req.body.from_date;
+    var to_date = req.body.to_date;
+    var resort_id = req.body.resort_id;
+
+    try {
+      
+      res.send(true);
+      
     } catch (err) {
       res.status(500).send({
         message:

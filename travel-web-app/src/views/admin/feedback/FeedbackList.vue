@@ -40,13 +40,18 @@
           <div class="comment-list">
             <div class="comment" :key="comment.comment_id" v-for="comment in feedback.comments">
               <div class="user-comment">
-                <v-avatar class="pointer" v-bind="props" color="info">
+                <v-avatar class="pointer" color="info">
                   <v-img v-if="comment.user?.avatar" alt="Avatar" :src="comment.user?.avatar"></v-img>
                   <v-icon v-else icon="mdi-account-circle"></v-icon>
                 </v-avatar>
-                <div class="user-comment__title">
+                <div class="user-comment__title flex1">
                   <div class="user-name">{{ comment.user?.name }}</div>
                   <div class="comment-date">{{ formatDate(comment.created_date) }}</div>
+                </div>
+                <div class="comment__score">
+                  <div class="score-wrapper">
+                    {{ comment.score }}
+                  </div>
                 </div>
               </div>
               <div class="comment-title">{{ comment.title }}</div>
@@ -55,7 +60,14 @@
 
           </div>
           <div class="paging">
-            <v-pagination v-model="page" :pages="feedback.total_pages" :range-size="1" active-color="#DCEDFF" />
+            <!-- <v-pagination v-model="page" :pages="feedback.total_pages" :range-size="1" active-color="#DCEDFF" /> -->
+            <vue-awesome-paginate
+              :total-items="feedback.total_pages"
+              :items-per-page="5"
+              :max-pages-shown="5"
+              v-model="page"
+              :on-click="changePage"
+            />
           </div>
         </template>
         <template v-else>
@@ -75,14 +87,14 @@ import ResortApi from '@/js/api/resort/ResortApi';
 import { mapState } from 'vuex';
 import { endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths, addMonths, startOfWeek, endOfWeek, startOfDay, endOfDay } from 'date-fns';
 // import moment from 'moment';
-import VPagination from "@hennge/vue3-pagination";
+// import VPagination from "@hennge/vue3-pagination";
 import { formatDate } from "@/js/common/format";
 
 export default {
   name: "FeedbackList",
   extends: baseList,
   components: {
-    VPagination
+    // VPagination
   },
   computed: {
     ...mapState('moduleAuth', ['user']),
@@ -170,7 +182,16 @@ export default {
         [from_date.value, to_date.value] = modelData;
       }
 
-      loadCommentData(resortId.value)
+      loadCommentData(resortId.value);
+    }
+    
+    /**
+     * Chọn trang
+     * @param {*} iPage 
+     */
+    const changePage = (iPage) => {
+      page.value = iPage;
+      loadCommentData(resortId.value);
     }
 
     return {
@@ -186,7 +207,8 @@ export default {
       limit,
       feedback,
       loadCommentData,
-      formatDate
+      formatDate,
+      changePage
     };
   },
 };
@@ -217,6 +239,8 @@ export default {
     flex-direction: row;
     flex: 1;
     height: 0px;
+    background-color: var(--white);
+    border-radius: 8px;
 
     .feedback-left {
       flex: 2;
@@ -230,6 +254,9 @@ export default {
         display: flex;
         flex-direction: row;
         padding: 8px;
+        margin: 8px;
+        background-color: var(--white);
+        border-radius: 8px;
         cursor: pointer;
 
         .resort-cover {
@@ -277,8 +304,31 @@ export default {
         overflow: auto;
 
         .comment {
+          padding: 8px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          margin-bottom: 8px;
+          background-color: var(--white);
           .user-comment {
             display: flex;
+
+            .user-comment__title {
+              margin-left: 8px;
+            }
+
+            .comment__score {
+              display: flex;
+              flex-direction: column;
+              .score-wrapper {
+                background-color: var(--primary-color);
+                color: var(--white);
+                width: 24px;
+                height: 24px;
+                text-align: center;
+                border-radius: 50%;
+              }
+              
+            }
           }
         }
       }

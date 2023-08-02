@@ -21,6 +21,9 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+// serve your file as static
+app.use(express.static(__dirname));
+
 db.sequelize.sync({ alter: true })
   .then(() => {
     console.log("Synced db.");

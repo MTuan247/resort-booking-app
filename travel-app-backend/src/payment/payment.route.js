@@ -3,7 +3,7 @@ module.exports = app => {
 
   var router = require("express").Router();
 
-  router.post("/", paymentController.createPaymentUrl.bind(paymentController));
+  router.post("/createPaymentUrl", paymentController.createPaymentUrl.bind(paymentController));
   router.get("/callback", paymentController.callback.bind(paymentController));
 
   app.use('/api/payment', router);

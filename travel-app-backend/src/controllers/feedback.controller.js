@@ -8,66 +8,14 @@ class FeedbackController extends BaseController {
     super(model);
   }
 
-  // Láy thông tin feed back của resort
+  // Lấy thông tin feed back của resort
   async getFeedbacks(req, res) {
     var resort_id = req.body.resort_id;
     var limit = req.body.limit;
     var offset = req.body.offset;
 
     try {
-      let data = {}
-      let comments = await this.Model.findAll({
-        where: {
-          resort_id: resort_id,
-        },
-        include: [{model: db.users, attributes: ['name', 'user_id', 'avatar']}],
-        order: [
-          ['created_date', 'DESC']
-        ],
-        limit,
-        offset
-      });
-
-      let info = await db.comments.findOne({
-        raw: true,
-        where: {
-          resort_id: resort_id
-        },
-        attributes: [
-          [db.sequelize.fn('AVG', db.sequelize.col('score')), 'rate'],
-          [db.sequelize.fn('COUNT', db.sequelize.col('comment_id')), 'summary']
-        ],
-        group: ['resort_id'],
-      })
-
-      let rates = await db.comments.findAll({
-        raw: true,
-        where: {
-          resort_id: resort_id
-        },
-        attributes: [
-          'score',
-          [db.sequelize.fn('COUNT', db.sequelize.col('score')), 'value']
-        ],
-        group: ['resort_id', 'score'],
-        order: [
-          ['score', 'DESC']
-        ]
-      })
-
-      data.comments = comments;
-      data.rate = info.rate;
-      data.summary = info.summary;
-      data.rates = [
-      ];
-      
-      for (let index = 5; index > 0; index--) {
-        data.rates.push({
-          score: index,
-          value: rates.find(x => x.score == index)?.value || 0,
-        })
-      }
-
+      let data = await this.getFeedbackInfo(resort_id, limit, offset)
       res.send(data);
     } catch (err) {
       res.status(500).send({
@@ -157,6 +105,62 @@ class FeedbackController extends BaseController {
     req.body.Model.user_id = req.context.user_id;
 
     super.create(req, res);
+  }
+
+  async getFeedbackInfo(resort_id, limit, offset) {
+    let data = {}
+      let comments = await this.Model.findAll({
+        where: {
+          resort_id: resort_id,
+        },
+        include: [{model: db.users, attributes: ['name', 'user_id', 'avatar']}],
+        order: [
+          ['created_date', 'DESC']
+        ],
+        limit,
+        offset
+      });
+
+      let info = await db.comments.findOne({
+        raw: true,
+        where: {
+          resort_id: resort_id
+        },
+        attributes: [
+          [db.sequelize.fn('AVG', db.sequelize.col('score')), 'rate'],
+          [db.sequelize.fn('COUNT', db.sequelize.col('comment_id')), 'summary']
+        ],
+        group: ['resort_id'],
+      })
+
+      let rates = await db.comments.findAll({
+        raw: true,
+        where: {
+          resort_id: resort_id
+        },
+        attributes: [
+          'score',
+          [db.sequelize.fn('COUNT', db.sequelize.col('score')), 'value']
+        ],
+        group: ['resort_id', 'score'],
+        order: [
+          ['score', 'DESC']
+        ]
+      })
+
+      data.comments = comments;
+      data.rate = info.rate;
+      data.summary = info.summary;
+      data.rates = [
+      ];
+      
+      for (let index = 5; index > 0; index--) {
+        data.rates.push({
+          score: index,
+          value: rates.find(x => x.score == index)?.value || 0,
+        })
+      }
+      return data;
   }
 
 }

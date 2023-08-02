@@ -111,17 +111,19 @@ class PaymentController {
     let hmac = crypto.createHmac("sha512", secretKey);
     let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");
 
-    if (secureHash === signed) {
+    if (secureHash === signed && vnp_Params['vnp_ResponseCode'] == '00') {
       //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
       console.log({
         success: true,
         code: vnp_Params['vnp_ResponseCode']
       });
+      res.sendFile(__dirname + "/views/payment_success.html");
     } else {
       console.error({
         success: false,
         code: '97'
       });
+      res.sendFile(__dirname + "/views/payment_fail.html");
     }
   }
 

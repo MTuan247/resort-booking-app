@@ -198,9 +198,10 @@ export default {
   .order-main {
     display: flex;
     flex-direction: column;
-    // height: 0px;
-    // overflow: auto;
-    // flex: 1;
+    background-color: var(--white);
+    border-radius: 8px;
+    padding: 8px;
+    margin: 8px;
 
     .resort-status {
       display: flex;

@@ -1,5 +1,5 @@
 import { Avatar, Box, Pressable, Divider, HStack, Heading, Image, ScrollView, Text, VStack, ZStack, Button } from 'native-base';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Alert, Platform, NativeModules, SafeAreaView } from 'react-native';
 import { Icon } from 'native-base';
 import { Ionicons, FontAwesome5, EvilIcons } from 'react-native-vector-icons';
@@ -11,6 +11,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { formatMoney } from '../common/function/format';
 import { useToast } from 'native-base';
 import BaseButton from '../components/base/BaseButton';
+import { useFocusEffect } from '@react-navigation/native';
+import ShowDateRange from '../components/reuse/ShowDateRange';
+import { scoreRangeDescriptor } from '../common/function/feedback';
 
 const windowHeight = Dimensions.get('window').height;
 const { StatusBarManager } = NativeModules;
@@ -24,9 +27,10 @@ export default function ResortScreen({ route, navigation }) {
 
   const param = route.params;
 
-  useEffect(() => {
+  useFocusEffect(useCallback(() => {
     load(param.item.resort_id);
-  }, []);
+    return;
+  }, []))
 
   /**
    * Load dữ liệu
@@ -140,10 +144,10 @@ export default function ResortScreen({ route, navigation }) {
                 <HStack paddingTop={2} alignItems={"center"}>
                   <HStack borderRadius={8} backgroundColor={global.theme.COLORS.PRIMARY} alignItems={"center"}>
                     <Icon color={global.theme.COLORS.WHITE} m={1} size={4} as={FontAwesome5} name='umbrella-beach'></Icon>
-                    <Text color={global.theme.COLORS.WHITE} p={1}>9.2</Text>
+                    <Text color={global.theme.COLORS.WHITE} p={1}>{Math.round(item.feedback?.rate * 10) / 10}</Text>
                   </HStack>
-                  <Text ml={1}>Tuyệt vời</Text>
-                  <Text ml={1} color={global.theme.COLORS.GRAY}>(179 đánh giá)</Text>
+                  <Text ml={1}>{scoreRangeDescriptor(item.feedback?.rate)}</Text>
+                  <Text ml={1} color={global.theme.COLORS.GRAY}>({item.feedback?.summary} đánh giá)</Text>
                   <Pressable onPress={() => showComment()} flex={1}>
                     <HStack justifyContent={'flex-end'} alignItems={'center'}>
                       <Text color={global.theme.COLORS.PRIMARY}>Xem đánh giá</Text>
@@ -212,14 +216,14 @@ export default function ResortScreen({ route, navigation }) {
             ) : (<></>)
           }
           {
-            item?.order && (
-              <Box marginTop={4}>
+            item?.order ? (
+              <Box marginX={4} marginTop={4}>
                 <Text fontWeight={600} fontSize={18} textTransform={"uppercase"}>Thông tin đặt phòng</Text>
-                <Text fontWeight={500} fontSize={14}>Trạng thái: {param.item.order?.status ? 'Đặt phòng thành công' : 'Đang xử lý'}</Text>
-                <ShowDateRange firstDate={param.item?.order.from_date}
-                  secondDate={param.item?.order.to_date}></ShowDateRange>
+                <Text fontWeight={500} fontSize={14}>Trạng thái: {item.order?.status ? 'Đặt phòng thành công' : 'Đang xử lý'}</Text>
+                <ShowDateRange firstDate={item?.order?.from_date}
+                  secondDate={item?.order?.to_date}></ShowDateRange>
               </Box>
-            )
+            ) : (<></>)
           }
         </ScrollView>
         {
