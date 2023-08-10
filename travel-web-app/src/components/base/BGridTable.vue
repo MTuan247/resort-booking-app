@@ -45,7 +45,7 @@
         </tr> -->
         <b-grid-row
           :key="row[this.idField]"
-          v-for="(row) in records"
+          v-for="(row) in records.data"
           :row="row"
           :columns="columns"
           @checkbox="() => checkBox(row)"
@@ -72,11 +72,20 @@
         ]"
       />
     </Teleport>
+    <div v-if="paging" class="paging">
+      <vue-awesome-paginate
+        :total-items="records.total"
+        :items-per-page="recordPerPage"
+        :max-pages-shown="5"
+        v-model="page"
+        :on-click="changePage"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-import { computed, getCurrentInstance } from "vue";
+import { computed, getCurrentInstance, ref } from "vue";
 import BContextMenu from "./BContextMenu.vue";
 import BGridRow from "./BGridRow.vue";
 import { useTree } from "@/js/common/tree";
@@ -88,6 +97,12 @@ export default {
     selectedRows: {},
     isTreeGrid: {
       default: false,
+    },
+    paging: {
+      default: false,
+    },
+    recordPerPage: {
+      default: 10,
     },
     idField: {
       default: "id",
@@ -162,13 +177,25 @@ export default {
 
     const records = computed({
       get() {
+        let data = []
         if (!proxy.isTreeGrid) {
-          return proxy.modelValue;
+          data = proxy.modelValue;
         } else {
-          let tree = toTree(proxy.modelValue, proxy.idField, proxy.parentField);
-
-          return tree;
+          data = toTree(proxy.modelValue, proxy.idField, proxy.parentField);
         }
+        
+        if (proxy.paging && typeof data.slice == 'function') {
+          let offset = (page.value - 1) * proxy.recordPerPage;
+          return {
+            total: data.length,
+            data: [...data].slice(offset, offset + proxy.recordPerPage)
+          };
+        }
+
+        return {
+          data: data,
+          total: data.length
+        };
       },
       set(val) {
         proxy.$emit("update:modelValue", val);
@@ -179,9 +206,21 @@ export default {
       row.isSelected = !row.isSelected
     }
 
+    const page = ref(1);
+
+    /**
+     * Chọn trang
+     * @param {*} iPage 
+     */
+     const changePage = (iPage) => {
+      page.value = iPage;
+    }
+
     return {
       records,
-      checkBox
+      checkBox,
+      changePage,
+      page
     };
   },
 };

@@ -17,3 +17,13 @@ export const validatePhone = (text) => {
   const reg =  /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/;
   return reg.test(text);
 }
+
+/**
+ * Validate Username
+ * @param {*} text 
+ * @returns 
+ */
+export const validateUsername = (text) => {
+  const reg =  /^[a-zA-Z0-9]+$/;
+  return reg.test(text);
+}

@@ -19,7 +19,7 @@
           </template>
         </VueDatePicker>
 
-        <div @click="loadCommentData(resort.resort_id)" :key="resort.resort_id" v-for="resort in resorts"
+        <div :class="resort.resort_id == resortId ? 'active' : ''" @click="loadCommentData(resort.resort_id)" :key="resort.resort_id" v-for="resort in resorts"
           class="resort-item">
           <div class="resort-left">
             <img :src="resort.image" class="resort-cover" />
@@ -62,8 +62,8 @@
           <div class="paging">
             <!-- <v-pagination v-model="page" :pages="feedback.total_pages" :range-size="1" active-color="#DCEDFF" /> -->
             <vue-awesome-paginate
-              :total-items="feedback.total_pages"
-              :items-per-page="5"
+              :total-items="feedback.total_record"
+              :items-per-page="limit"
               :max-pages-shown="5"
               v-model="page"
               :on-click="changePage"
@@ -208,7 +208,8 @@ export default {
       feedback,
       loadCommentData,
       formatDate,
-      changePage
+      changePage,
+      resortId
     };
   },
 };
@@ -258,6 +259,10 @@ export default {
         background-color: var(--white);
         border-radius: 8px;
         cursor: pointer;
+
+        &.active {
+          background-color: #bbb;
+        }
 
         .resort-cover {
           width: 100px;

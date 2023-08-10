@@ -33,7 +33,9 @@ export const scoreDescriptor = (score) => {
    */
 export const scoreRangeDescriptor = (score) => {
   let result = '';
-  if (score <= 1) {
+  if (!score) {
+    result = 'Chưa có đánh giá';
+  } else if (score <= 1) {
     result = 'Rất tệ';
   } else if (score <= 2) {
     result = 'Tệ';

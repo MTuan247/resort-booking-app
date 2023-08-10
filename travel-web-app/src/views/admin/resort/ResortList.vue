@@ -26,6 +26,8 @@
         :columns="columns"
         :idField="keyEntity"
         parentField="parent_id"
+        :recordPerPage="5"
+        :paging="true"
       >
         <template #action="{ row }">
           <div class="table-action">
@@ -122,6 +124,8 @@ export default {
   .resort-main {
     display: flex;
     flex-direction: column;
+    height: 0px;
+    flex: 1;
 
     .table-action {
       display: flex;

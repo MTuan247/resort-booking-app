@@ -11,6 +11,12 @@ import Navigation from './src/navigation'
 import { navigationTheme, nativeBaseTheme } from './src/resources/theme';
 import { Provider } from 'react-redux';
 import { store } from './src/redux/store';
+
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();
+
 export default function App() {
 
   /**

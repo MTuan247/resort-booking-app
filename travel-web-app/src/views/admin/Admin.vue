@@ -33,6 +33,7 @@ export default {
   flex-direction: row;
   flex: 1;
   background-color: #efefef;
+  height: 0px;
 
   .admin-list {
     display: flex;

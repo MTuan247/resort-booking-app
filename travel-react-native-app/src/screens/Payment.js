@@ -12,6 +12,7 @@ import DateRange from '../components/modal/DateRange';
 import { validateEmail, validatePhone } from '../common/function/validate';
 import { WebView } from 'react-native-webview';
 import paymentApi from '../common/api/payment';
+import orderApi from '../common/api/order';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -147,6 +148,19 @@ export default function PaymentScreen({ route }) {
       return;
     }
 
+    let status = await orderApi.status({
+      from_date: selectedRange.firstDate,
+      to_date: selectedRange.secondDate,
+      resort_id: param.room.resort_id,
+    })
+
+    if (status.data?.is_full) {
+      Alert.alert('Thông báo', `Đã hết phòng từ ngày ${formatDate(status.data.from_date)} đến ngày ${formatDate(status.data.to_date)}.`, [
+        { text: 'Đồng ý', onPress: () => console.log('OK Pressed') },
+      ]);
+      return;
+    }
+
     let res = await paymentApi.createPaymentUrl({
       amount: calculateMoney(),
       bankCode: "VNBANK",
@@ -191,6 +205,8 @@ export default function PaymentScreen({ route }) {
           { text: 'Đồng ý', onPress: () => navigation.goBack() },
         ]);
       })
+    } else {
+      setPaymentUrl(null)
     }
   };
 

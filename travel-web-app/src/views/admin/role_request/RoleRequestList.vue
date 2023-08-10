@@ -133,6 +133,8 @@ export default {
   .user-main {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    height: 0px;
 
     .table-action {
       display: flex;

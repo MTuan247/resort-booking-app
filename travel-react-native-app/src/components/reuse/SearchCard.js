@@ -1,7 +1,9 @@
-import { Box, HStack, Heading, Image, Pressable, Text, VStack } from 'native-base';
+import { Box, HStack, Heading, Icon, Image, Pressable, Text, VStack } from 'native-base';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { formatMoney } from '../../common/function/format';
+import { scoreRangeDescriptor } from '../../common/function/feedback';
+import { FontAwesome5 } from 'react-native-vector-icons';
 
 export default function SearchCard(props) {
 
@@ -20,7 +22,17 @@ export default function SearchCard(props) {
           <Heading fontSize={18} noOfLines={2} fontWeight={600}>{props.title}</Heading>
           <Text>{props.address}</Text>
           <Box justifyContent="flex-end" flex={1}>
-            <Text color={global.theme.COLORS.PRICE} fontWeight={500} fontSize={16} textAlign="right">{price}</Text>
+
+            <HStack alignItems={"center"}>
+              
+              <HStack borderRadius={8} backgroundColor={global.theme.COLORS.PRIMARY} alignItems={"center"}>
+                <Icon color={global.theme.COLORS.WHITE} m={1} size={4} as={FontAwesome5} name='umbrella-beach'></Icon>
+                <Text color={global.theme.COLORS.WHITE} p={1}>{Math.round(props?.rate * 10) / 10}</Text>
+              </HStack>
+
+              <Text flex={1} color={global.theme.COLORS.PRICE} fontWeight={500} fontSize={16} textAlign="right">{price}</Text>
+
+            </HStack>
           </Box>
         </VStack>
       </HStack>

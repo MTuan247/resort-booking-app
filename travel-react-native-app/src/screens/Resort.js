@@ -1,4 +1,4 @@
-import { Avatar, Box, Pressable, Divider, HStack, Heading, Image, ScrollView, Text, VStack, ZStack, Button } from 'native-base';
+import { Avatar, Box, Pressable, Divider, HStack, Heading, Image, ScrollView, Text, VStack, ZStack, Button, Skeleton } from 'native-base';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Alert, Platform, NativeModules, SafeAreaView } from 'react-native';
 import { Icon } from 'native-base';
@@ -22,7 +22,7 @@ export default function ResortScreen({ route, navigation }) {
 
   const context = useSelector((state) => state.context);
   const toast = useToast();
-  const [item, setItem] = useState({});
+  const [item, setItem] = useState({ loading: true });
   const [isLiked, setIsLiked] = useState(false);
 
   const param = route.params;
@@ -103,6 +103,23 @@ export default function ResortScreen({ route, navigation }) {
     navigation.push(screens.SCREEN.RESORT, { item: detail, title: item.title, resort: item })
   }
 
+  if (item?.loading) {
+    return (
+      <VStack>
+        <Skeleton padding={4} h={16} rounded={'md'} />
+        <Skeleton.Text padding={4} rounded={'md'} />
+        <Skeleton padding={4} h={16} rounded={'md'} />
+        <Skeleton.Text padding={4} rounded={'md'} />
+        <Skeleton padding={4} h={16} rounded={'md'} />
+        <Skeleton.Text padding={4} rounded={'md'} />
+        <Skeleton padding={4} h={16} rounded={'md'} />
+        <Skeleton.Text padding={4} rounded={'md'} />
+        <Skeleton padding={4} h={16} rounded={'md'} />
+        <Skeleton.Text padding={4} rounded={'md'} />
+      </VStack>
+    )
+  }
+
   return (
     <>
       <SafeAreaView style={{
@@ -124,7 +141,7 @@ export default function ResortScreen({ route, navigation }) {
                     <Icon as={Ionicons} name={"location-sharp"} size={5} color={global.theme.COLORS.PRIMARY} />
                     <Text marginLeft={1} fontSize={15} color={global.theme.COLORS.GRAY} fontWeight={600}>{item.address}</Text>
                   </HStack>
-                  <Pressable onPress={() => like()}>
+                  <Pressable paddingLeft={4} onPress={() => like()}>
                     {
                       isLiked ? (
                         <Icon as={Ionicons} name={"heart"} size={6} color={global.theme.COLORS.PRIMARY} />
@@ -170,7 +187,7 @@ export default function ResortScreen({ route, navigation }) {
                       <Pressable onPress={() => showImageList()} key={article.article_id} >
                         <VStack marginRight={2} alignItems="center">
                           <Avatar source={{ uri: article.images[0]?.src }}></Avatar>
-                          <Text>{article.title}</Text>
+                          <Text textAlign={'center'} width={16} noOfLines={2}>{article.title}</Text>
                         </VStack>
                       </Pressable>
                     )
@@ -198,13 +215,21 @@ export default function ResortScreen({ route, navigation }) {
                             </Pressable>
                             <HStack alignItems={'center'}>
                               <Text flex={1} color={global.theme.COLORS.PRICE} fontSize={16}>{formatMoney(detail.from_cost)} đ</Text>
-                              {
+                              <HStack alignItems={'center'}>
+                                {
+                                  detail.order && (
+                                    <Text color={global.theme.COLORS.SUCCESS} marginRight={2}>Đã đặt phòng</Text>
+                                  )
+                                }
+                                <Button onPress={() => showPayment(detail)} bg={global.theme.COLORS.PRIMARY} borderRadius={12}>Đặt ngay</Button>
+                              </HStack>
+                              {/* {
                                 detail.order ? (
                                   <Button borderRadius={12}>Đã đặt phòng</Button>
                                 ) : (
                                   <Button onPress={() => showPayment(detail)} bg={global.theme.COLORS.PRIMARY} borderRadius={12}>Đặt ngay</Button>
                                 )
-                              }
+                              } */}
                             </HStack>
                           </VStack>
                         </Box>

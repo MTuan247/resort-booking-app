@@ -38,7 +38,7 @@ const SearchInput = (props) => {
   />
 }
 
-export default function SearchBar({ style }) {
+export default function SearchBar({ style, onSearch }) {
 
   const searchState = useSelector((state) => state.search);
   const dispatch = useDispatch();
@@ -70,6 +70,9 @@ export default function SearchBar({ style }) {
    * press tìm kiếm
    */
   const handleSearch = () => {
+    if (typeof onSearch == 'function') {
+      onSearch();
+    }
     dispatch(saveSearch({
       dateRange: selectedRange,
       location: location,
@@ -123,7 +126,7 @@ export default function SearchBar({ style }) {
       {
         locationModal && 
         <SelectLocation
-          onSelect={(location) => setLocation(location.location_name)}
+          onSelect={(location) => setLocation(location)}
           visible={locationModal}
           setVisible={(visible) => setLocationModal(visible)}
         />

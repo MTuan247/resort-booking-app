@@ -1,5 +1,7 @@
 const userController = require('../controllers/user.controller');
+const bcrypt = require('bcrypt');
 const { generateToken } = require('./auth.method.js');
+const SALT_ROUNDS = 10;
 
 exports.register = async (req, res) => {
 	const username = req.body.user_name.toLowerCase();
@@ -11,10 +13,10 @@ exports.register = async (req, res) => {
 	const user = await userController.getUser({user_name: username});
 	if (user) res.status(409).send('Tên tài khoản đã tồn tại.');
 	else {
-		// const hashPassword = bcrypt.hashSync(req.body.password, SALT_ROUNDS);
+		const hashPassword = bcrypt.hashSync(password, SALT_ROUNDS);
 		const newUser = {
 			user_name: username,
-			password: password,
+			password: hashPassword,
 			name,
 			email,
 			tel,
@@ -49,10 +51,11 @@ exports.login = async (req, res) => {
 	}
 
 	// const isPasswordValid = bcrypt.compareSync(password, user.password);
-	const isPasswordValid = password == user.password;
+	const isPasswordValid = password == user.password || bcrypt.compareSync(password, user.password);
 	if (!isPasswordValid) {
 		return res.status(401).send('Mật khẩu không chính xác.');
 	}
+	console.log(bcrypt.hashSync(req.body.password, SALT_ROUNDS))
 
 	const accessTokenLife = process.env.ACCESS_TOKEN_LIFE;
 	const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;

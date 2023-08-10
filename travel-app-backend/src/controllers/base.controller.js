@@ -27,8 +27,10 @@ class BaseController {
   // Retrieve all Models from the database.
   findAll(req, res) {
     var condition = req.body.Condition;
+    var limit = req.body.limit;
+    var offset = req.body.offset;
 
-    this.Model.findAll({ where: condition })
+    this.Model.findAll({ where: condition, limit, offset })
       .then(data => {
         res.send(data);
       })

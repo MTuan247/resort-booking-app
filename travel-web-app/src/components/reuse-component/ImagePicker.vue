@@ -14,7 +14,7 @@
       type="file"
       :multiple="multiple"
       class="w-px h-px opacity-0 overflow-hidden absolute"
-      accept=".pdf,.jpg,.jpeg,.png"
+      accept=".pdf,.jpg,.jpeg,.png,.avif,.jfif"
       @change="onChange"
     >
 

@@ -7,6 +7,7 @@
     :item-title="itemTitle"
     :item-value="itemValue"
     :return-object="returnObject"
+    :clearable="clear"
     hide-details
     v-model="value"
   ></v-autocomplete>
@@ -34,6 +35,9 @@ export default {
     },
     returnObject: {
       default: false
+    },
+    clear: {
+      default: true
     }
   },
   setup() {

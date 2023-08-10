@@ -11,7 +11,7 @@
       <b-grid-table
         :isTreeGrid="false"
         @edit="editRow"
-        v-model="gridData"
+        v-model="pagingData"
         :columns="columns"
         :idField="this.keyEntity"
       >
@@ -19,12 +19,21 @@
           <v-icon icon="mdi-pencil-outline" @click="editRow(row)"></v-icon>
         </template>
       </b-grid-table>
+      <div class="paging">
+        <vue-awesome-paginate
+          :total-items="totalPages"
+          :items-per-page="limit"
+          :max-pages-shown="5"
+          v-model="page"
+          :on-click="changePage"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from "@vue/runtime-core";
+import { computed, getCurrentInstance, ref } from "@vue/runtime-core";
 import BGridTable from "@/components/base/BGridTable.vue";
 
 import baseList from "@/js/base/baseList";
@@ -40,7 +49,12 @@ export default {
 
     const api = UserApi;
     const detailForm = 'UserDetail';
-    const keyEntity = 'user_id'
+    const keyEntity = 'user_id';
+
+    const {proxy} = getCurrentInstance();
+
+    const page = ref(1);
+    const limit = 10;
 
     const columns = ref([
       {
@@ -59,12 +73,43 @@ export default {
         style: "width: 40px;",
       },
     ]);
+    
+    /**
+     * Dữ liệu phân trang
+     */
+    const pagingData = computed(() => {
+      if (typeof proxy.gridData.slice != 'function')  {
+        return []
+      }
+      let offset = (page.value - 1) * limit;
+      return [...proxy.gridData].slice(offset, offset + limit);
+    });
+
+    /**
+     * Số trang
+     */
+    const totalPages = computed(() => {
+      return proxy.gridData?.length;
+    })
+
+    /**
+     * Chọn trang
+     * @param {*} iPage 
+     */
+     const changePage = (iPage) => {
+      page.value = iPage;
+    }
 
     return {
       columns,
       api,
       detailForm,
-      keyEntity
+      keyEntity,
+      page,
+      changePage,
+      pagingData,
+      limit,
+      totalPages
     };
   },
 };
@@ -75,6 +120,15 @@ export default {
   .user-main {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    height: 0px;
+
+    .paging {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 }
 </style>

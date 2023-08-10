@@ -8,7 +8,7 @@ import { login } from '../redux/reducer/contextReducer';
 import screens from '../resources/screens';
 import { useNavigation } from '@react-navigation/native';
 import authApi from '../common/api/auth';
-import { validateEmail, validatePhone } from '../common/function/validate';
+import { validateEmail, validatePhone, validateUsername } from '../common/function/validate';
 
 export default function RegisterScreen() {
 
@@ -36,7 +36,12 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     if (!userName) {
-      showError('Tên tài khoản không được để trống');
+      showError('Tên tài khoản không được để trống.');
+      return;
+    }
+
+    if (!validateUsername(userName)) {
+      showError('Tên tài khoản không thể chứa khoảng trống và các ký tự đặc biệt.');
       return;
     }
 
@@ -114,6 +119,9 @@ export default function RegisterScreen() {
       {/* {
         error && <MyAlert marginBottom={4} status="error" title={error}></MyAlert>
       } */}
+      {
+        error && <Text color={global.theme.COLORS.RED} marginBottom={4} status="error" title={error}>{error}</Text>
+      }
       <CheckBox
         iconType="material-community"
         checkedIcon="checkbox-marked"

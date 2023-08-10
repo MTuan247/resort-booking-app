@@ -4,7 +4,25 @@
   height: 100%;
   overflow-x: auto;
   overflow-y: auto;
-  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+
+  .v-table {
+    height: 0;
+    flex: 1;
+    overflow: auto;
+    thead {
+      position: sticky;
+      top: 0px;
+    }
+  }
+
+  .paging {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .grid::-webkit-scrollbar-track {
@@ -15,6 +33,7 @@
   width: 100%;
   table-layout: fixed;
   overflow: auto;
+  border: 1px solid #ddd;
 }
 
 .grid th,td {

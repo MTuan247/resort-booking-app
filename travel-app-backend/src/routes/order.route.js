@@ -8,6 +8,7 @@ module.exports = app => {
   router.post("/", orders.findAll.bind(orders));
   router.post("/resorts", orders.getResortOrder.bind(orders));
   router.get("/", orders.findAll.bind(orders));
+  router.post("/status", orders.checkRoomStatus.bind(orders));
 
   // Retrieve a single order with id
   router.get("/:id", orders.findOne.bind(orders));

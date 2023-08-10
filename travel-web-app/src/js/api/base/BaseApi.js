@@ -18,7 +18,7 @@ export default class BaseAPI {
   }
 
   async getById(id) {
-    var res = await httpRequest.get(this.getUrl() + id, id);
+    var res = await httpRequest.get(this.getUrl() + id, {});
 
     return res;
   }

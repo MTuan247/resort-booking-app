@@ -26,6 +26,7 @@
             <b-autocomplete
               class="mt-2"
               :returnObject="true"
+              :clear="true"
               :items="parentList"
               @update:modelValue="chooseParent"
               v-model="parent"
@@ -62,6 +63,13 @@
                 v-model="model.max_people"
                 type="number"
                 label="Số người"
+              ></b-input>
+            </div>
+            <div v-if="model.parent_id" class="d-flex mt-2">
+              <b-input
+                v-model="model.quantity"
+                type="number"
+                label="Số lượng"
               ></b-input>
             </div>
             <!-- <div class="d-flex mt-2">
@@ -175,8 +183,8 @@ export default {
         };
       },
       set(value) {
-        model.value.parent_id = value.value;
-        model.value.parent_name = value.title;
+        model.value.parent_id = value?.value;
+        model.value.parent_name = value?.title;
       },
     });
 
@@ -285,16 +293,15 @@ export default {
      * Sự kiện chọn thuộc
      */
     const chooseParent = (value) => {
-      let parent = parentList.value.find(x => x.resort_id == value.value);
+      let parent = parentList.value.find(x => x.resort_id == value?.value);
 
       if (parent) {
-        model.value.phone = parent.phone;
-        model.value.email = parent.email;
-        model.value.province_name = parent.province_name;
-        model.value.district_name = parent.district_name;
         model.value.type = proxy.$enums.ResortType.Room
+        model.value.location = parent.location
+        model.value.location_id = parent.location_id
+        model.value.address = parent.address
       } else {
-        model.value.type = proxy.$enums.ResortType.Resort
+        model.value.type = proxy.$enums.ResortType.Resort;
       }
     }
 

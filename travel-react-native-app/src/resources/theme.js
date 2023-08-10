@@ -19,6 +19,7 @@ const theme = {
     BLUE: '#1254BB',
     RED: '#f00',
     PRICE: '#1254BB',
+    SUCCESS: '#138636'
   },
   FONTS: {
     PRIMARY: 'Poppins',

@@ -7,6 +7,7 @@ import { login } from '../redux/reducer/contextReducer';
 import screens from '../resources/screens';
 import { useNavigation } from '@react-navigation/native';
 import authApi from '../common/api/auth';
+import { validateUsername } from '../common/function/validate';
 
 export default function LoginScreen() {
 
@@ -23,6 +24,11 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     if (!userName) {
       setError('Tên tài khoản không được để trống');
+      return;
+    }
+
+    if (!validateUsername(userName)) {
+      setError('Tên tài khoản không thể chứa khoảng trống và các ký tự đặc biệt.');
       return;
     }
 
@@ -55,7 +61,7 @@ export default function LoginScreen() {
       <Input value={userName} onChangeText={text => setUserName(text)} borderRadius={8} marginBottom={2} placeholder="Nhập tài khoản"></Input>
       <Input value={password} onChangeText={text => setPassword(text)} secureTextEntry={true} borderRadius={8} marginBottom={4} placeholder="Mật khẩu"></Input>
       {
-        error && <MyAlert marginBottom={4} status="error" title={error}></MyAlert>
+        error && <Text color={global.theme.COLORS.RED} marginBottom={4} status="error" title={error}>{error}</Text>
       }
       <Button onPress={() => handleLogin()} borderRadius={8} backgroundColor={global.theme.COLORS.PRIMARY} >Đăng nhập</Button>
       <Pressable onPress={() => navigation.navigate(screens.SCREEN.REGISTER)} marginTop={8}>

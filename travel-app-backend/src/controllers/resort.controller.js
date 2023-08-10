@@ -22,12 +22,14 @@ class ResortController extends BaseController {
     var condition = req.body.Condition;
     let context = req.context;
 
-    if (context?.user_id && context?.role == 'resort_owner') {
-      condition = { ...condition, user_id: context.user_id };
-    } else if (!context) {
+    if (!context) {
       res.status(401).send([]);
       return;
     }
+
+    if (context?.user_id) {
+      condition = { ...condition, user_id: context.user_id };
+    } 
 
     try {
       let data = await this.Model.findAll({ where: condition });
@@ -188,7 +190,7 @@ class ResortController extends BaseController {
     let limit = req.body.limit;
     let offset = req.body.offset;
     let sort = req.body.sort || 'rate';
-    let order = req.body.sort || 'DESC';
+    let order = req.body.order || 'DESC';
 
     let from_date = dateRange?.firstDate;
     let to_date = dateRange?.secondDate;

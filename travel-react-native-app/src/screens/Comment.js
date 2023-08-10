@@ -24,7 +24,8 @@ export default function CommentScreen({ route }) {
     rates: [],
     rate: 0.0,
     text: '',
-    summary: 0
+    summary: 0,
+    loading: true
   });
   const [comments, setComments] = useState([]);
   const [limit, setLimit] = useState(10);
@@ -156,6 +157,19 @@ export default function CommentScreen({ route }) {
     )
   }, []);
 
+  if (feedback?.loading) {
+    return (
+      <VStack>
+        <Skeleton padding={4} h={16} rounded={'md'} />
+        <Skeleton.Text padding={4} rounded={'md'} />
+        <Skeleton padding={4} h={16} rounded={'md'} />
+        <Skeleton.Text padding={4} rounded={'md'} />
+        <Skeleton padding={4} h={16} rounded={'md'} />
+        <Skeleton.Text padding={4} rounded={'md'} />
+      </VStack>
+    )
+  }
+
   /**
    * Render item comment skeleton
    */
@@ -177,7 +191,9 @@ export default function CommentScreen({ route }) {
       <HStack marginTop={4}>
         <VStack borderColor={global.theme.COLORS.PRIMARY} borderRadius={8} borderWidth={1} justifyContent={'center'} alignItems={'center'} paddingY={4} marginX={4} w='25%'>
           <Heading color={global.theme.COLORS.PRIMARY}>{Math.round(feedback.rate * 10) / 10}</Heading>
-          <Heading textAlign={'center'} fontWeight={600} color={global.theme.COLORS.PRIMARY}>{scoreRangeDescriptor(feedback.rate)}</Heading>
+          {
+            feedback.rate ? (<Heading textAlign={'center'} fontWeight={600} color={global.theme.COLORS.PRIMARY}>{scoreRangeDescriptor(feedback.rate)}</Heading>) : (<></>)
+          }
           <Text color={global.theme.COLORS.PRIMARY}>{feedback.summary} đánh giá</Text>
         </VStack>
         <VStack paddingRight={2} flex={1}>

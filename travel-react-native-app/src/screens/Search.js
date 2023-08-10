@@ -1,4 +1,4 @@
-import { Box, FlatList, ScrollView, Skeleton, VStack } from 'native-base';
+import { Box, FlatList, HStack, Pressable, ScrollView, Skeleton, VStack } from 'native-base';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux'
@@ -10,6 +10,8 @@ import resortApi from '../common/api/resort';
 import SearchBar from '../components/reuse/SearchBar';
 import { setShowSearch } from '../redux/reducer/searchReducer.js';
 import NoData from '../components/reuse/NoData';
+import { Chip, BottomSheet } from '@rneui/themed';
+import { ListItem } from '@rneui/base';
 
 export default function SearchScreen() {
 
@@ -22,13 +24,29 @@ export default function SearchScreen() {
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
   const [noItem, setNoItem] = useState(false);
+  const [sortModal, setSortModal] = useState(false);
+  const [sort, setSort] = useState('rate');
+  const [order, setOrder] = useState('DESC');
 
-  useFocusEffect(
-    useCallback(() => {
-      load();
-      return;
-    }, [searchState.dateRange, searchState.location, searchState.numberOfPeople])
-  );
+  const sortList = [
+    { title: 'Điểm cao nhất', field: 'rate', order: 'DESC' },
+    { title: 'Giá rẻ nhất', field: 'from_cost', order: 'ASC' },
+    { title: 'Giá đắt nhất', field: 'to_cost', order: 'DESC' },
+  ];
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     load();
+  //     return;
+  //   }, [searchState.dateRange, searchState.location, searchState.numberOfPeople])
+  // );
+  
+  /**
+   * Load lại dữ liệu
+   */
+  useEffect(() => {
+    load();
+  }, [sort, order, searchState.dateRange, searchState.location, searchState.numberOfPeople])
 
   let item = [
     {
@@ -49,7 +67,7 @@ export default function SearchScreen() {
       return;
     }
     setLoading(true);
-    resortApi.search({...searchState, limit, offset}).then(res => {
+    resortApi.search({...searchState, limit, offset, sort, order}).then(res => {
       let data = [...items, ...res.data];
       setItems(data);
       setOffset(data.length);
@@ -58,6 +76,25 @@ export default function SearchScreen() {
         setNoItem(true);
       }
     });
+  }
+
+  /**
+   * Reset lại trạng thái khi load form
+   */
+  const reset = () => {
+    setNoItem(false);
+    setSortModal(false);
+    setOffset(0);
+    setItems([]);
+  }
+
+  /**
+   * Load lại dữ liệu
+   */
+  const sortData = (item) => {
+    reset();
+    setSort(item.field);
+    setOrder(item.order)
   }
 
   const navigation = useNavigation();
@@ -94,11 +131,51 @@ export default function SearchScreen() {
     )
   }, []);
 
+  /**
+   * Nếu đang loading thì mở skeleton
+   */
+  if (!items.length && loading) {
+    let arr = [1, 2, 3, 4, 5]
+    return (
+      <FlatList 
+        data={arr}
+        keyExtractor={item => item}
+        renderItem={renderSkeleton}
+        ListFooterComponent={renderSkeleton}
+      />
+    )
+  }
+
   return (
-    <Box style={styles.container}>
+    <Box marginTop={4} style={styles.container}>
       {
-        searchState.showOnSearch && <SearchBar />
+        searchState.showOnSearch && <SearchBar onSearch={() => reset()} />
       }
+      <HStack marginLeft={2} marginBottom={2}>
+        <Chip icon={{
+              name: 'sort',
+              type: 'material-community',
+              size: 20,
+              color: 'white',
+            }} 
+            onPress={() => setSortModal(true)}
+            buttonStyle={styles.chipButton} title="Sắp xếp" />
+      </HStack>
+      <BottomSheet onBackdropPress={() => setSortModal(false)} modalProps={{}} isVisible={sortModal}>
+        <VStack paddingTop={4} borderTopRadius={8} backgroundColor={global.theme.COLORS.WHITE}>
+          {sortList.map((l, i) => (
+            <ListItem
+              key={i}
+              containerStyle={l.containerStyle}
+              onPress={() => sortData(l)}
+            >
+              <ListItem.Content>
+                <ListItem.Title style={l.titleStyle}>{l.title}</ListItem.Title>
+              </ListItem.Content>
+            </ListItem>
+          ))}
+        </VStack>
+      </BottomSheet>
       {/* <ScrollView>
         {
           items.map(item => {
@@ -132,6 +209,9 @@ export default function SearchScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 30,
+    // paddingTop: 30,
   },
+  chipButton: {
+    backgroundColor: global.theme.COLORS.PRIMARY
+  }
 });

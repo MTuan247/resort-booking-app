@@ -107,6 +107,13 @@ class FeedbackController extends BaseController {
     super.create(req, res);
   }
 
+  /**
+   * Lấy thông tin feedback
+   * @param {*} resort_id 
+   * @param {*} limit 
+   * @param {*} offset 
+   * @returns 
+   */
   async getFeedbackInfo(resort_id, limit, offset) {
     let data = {}
       let comments = await this.Model.findAll({
@@ -149,8 +156,8 @@ class FeedbackController extends BaseController {
       })
 
       data.comments = comments;
-      data.rate = info.rate;
-      data.summary = info.summary;
+      data.rate = info?.rate || 0;
+      data.summary = info?.summary || 0;
       data.rates = [
       ];
       

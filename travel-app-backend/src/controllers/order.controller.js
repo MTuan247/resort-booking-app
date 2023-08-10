@@ -154,8 +154,33 @@ class OrderController extends BaseController {
     var resort_id = req.body.resort_id;
 
     try {
+
+      let sql = `SELECT * FROM orders o WHERE o.from_date <= :to_date AND o.to_date >= :from_date AND o.resort_id = :resort_id;`
+
+      let orders = await db.sequelize.query(sql, {
+        replacements: { from_date: from_date, to_date: to_date, resort_id: resort_id },
+        type: db.sequelize.QueryTypes.SELECT
+      });
+
+      let resort = await db.resorts.findByPk(resort_id, {raw: true});
       
-      res.send(true);
+      let data = {
+        resort_id: resort_id,
+        title: resort.title,
+        quantity: resort.quantity,
+      }
+
+      if (resort?.quantity > orders.length) {
+        data.is_full = false;
+        data.rest_quantity = resort?.quantity - orders.length;
+      } else {
+        data.is_full = true;
+        data.rest_quantity = 0;
+        data.from_date = Math.max(...orders.map(x => new Date(x.from_date)), new Date(from_date));
+        data.to_date = Math.min(...orders.map(x => new Date(x.to_date)), new Date(to_date));
+      }
+
+      res.send(data);
       
     } catch (err) {
       res.status(500).send({
