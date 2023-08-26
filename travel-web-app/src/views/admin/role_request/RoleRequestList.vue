@@ -14,6 +14,7 @@
         v-model="gridData"
         :columns="columns"
         :idField="this.keyEntity"
+        :paging="true"
       >
         <template #action="{ row }">
           <div class="table-action">

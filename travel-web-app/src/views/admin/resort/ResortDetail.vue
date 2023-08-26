@@ -41,20 +41,20 @@
               <b-input
                 class="mr-2"
                 v-model="model.from_cost"
-                type="number"
+                inputType="number"
                 label="Từ giá"
               ></b-input>
               <b-input
                 class="ml-2"
                 v-model="model.to_cost"
-                type="number"
+                inputType="number"
                 label="Đến giá"
               ></b-input>
             </div>
             <div v-else class="d-flex mt-2">
               <b-input
                 v-model="model.from_cost"
-                type="number"
+                inputType="number"
                 label="Giá"
               ></b-input>
             </div>

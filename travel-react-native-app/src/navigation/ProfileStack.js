@@ -37,6 +37,7 @@ export default function ProfileStack(props) {
         headerTitleAlign: 'center',
         headerTintColor: global.theme.COLORS.BLACK,
       }}
+      initialRouteName={screens.SCREEN.PROFILE}
     >
       <Stack.Screen name={screens.SCREEN.PROFILE} component={ProfileScreen} />
       <Stack.Screen options={loginOptions} name={screens.SCREEN.LOGIN} component={LoginScreen} />

@@ -186,7 +186,7 @@ class ResortController extends BaseController {
     let title = req.body.title;
     let dateRange = req.body.dateRange;
     let location = req.body.location;
-    let numberOfPeople = req.body.numberOfPeople;
+    let numberOfPeople = req.body.numberOfPeople || null;
     let limit = req.body.limit;
     let offset = req.body.offset;
     let sort = req.body.sort || 'rate';
@@ -226,62 +226,21 @@ class ResortController extends BaseController {
     }
 
     try {
-      if (dateRange) {
+      if (dateRange || numberOfPeople) {
         // Tìm các phòng còn trống
-        let sql = `SELECT
-          r.*
-        FROM resorts r
-          LEFT JOIN schedules s
-            ON r.resort_id = s.resort_id
-        WHERE (s.from_date <= :to_date OR :to_date IS NULL)
-        AND (s.to_date >= :from_date OR :from_date IS NULL)
-        GROUP BY r.resort_id
-        HAVING COUNT(r.resort_id) >= r.quantity;`;
+        let sql = `CALL Proc_GetAvailableResort(:from_date, :to_date, :number_people);`;
 
-        let fullRooms = await db.sequelize.query(sql, {
-          replacements: { from_date: from_date, to_date: to_date },
+        let availables = await db.sequelize.query(sql, {
+          replacements: { from_date: from_date, to_date: to_date, number_people: numberOfPeople },
           type: db.sequelize.QueryTypes.SELECT
         });
 
-        // Nếu có lịch trùng thì loại bỏ resort đó đi
-        if (fullRooms.length) {
-          let ids = fullRooms.map(item => item.resort_id);
-          where.resort_id = {
-            [Op.notIn]: ids
-          }
-        }
-      }
+        // Thêm vào list
+        if (availables[0] && availables[0].length) {
+          let include_id = availables.map(x => x.resort_id);
 
-      if (numberOfPeople) {
-        let rooms = await this.Model.findAll({
-          where: {
-            min_people: {
-              [Op.or]: {
-                [Op.lte]: numberOfPeople,
-                [Op.is]: null
-              }
-            },
-            max_people: {
-              [Op.or]: {
-                [Op.gte]: numberOfPeople,
-                [Op.is]: null
-              }
-            },
-          },
-        });
-
-        if (rooms.length) {
-          let ids = [];
-          for (const room of rooms) {
-            if (room.parent_id) {
-              ids.push(room.parent_id);
-            } else {
-              ids.push(room.resort_id);
-            }
-          }
           where.resort_id = {
-            ...where.resort_id,
-            [Op.in]: ids
+            [Op.in]: include_id
           }
         }
       }

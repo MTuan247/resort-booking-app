@@ -176,8 +176,8 @@ class OrderController extends BaseController {
       } else {
         data.is_full = true;
         data.rest_quantity = 0;
-        data.from_date = Math.max(...orders.map(x => new Date(x.from_date)), new Date(from_date));
-        data.to_date = Math.min(...orders.map(x => new Date(x.to_date)), new Date(to_date));
+        data.from_date = from_date; // Math.max(...orders.map(x => new Date(x.from_date)), new Date(from_date));
+        data.to_date = to_date; // Math.min(...orders.map(x => new Date(x.to_date)), new Date(to_date));
       }
 
       res.send(data);

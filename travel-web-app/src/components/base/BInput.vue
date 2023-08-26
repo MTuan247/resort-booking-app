@@ -5,13 +5,12 @@
     :label="label"
     :placeholder="placeholder"
     :type="type"
-    v-model="modelValue"
+    v-model="computedValue"
     :variant="variant"
     :error-messages="errorMessages"
     density="compact"
     hide-details="auto"
     @keypress="isNumber"
-    @update:modelValue="input"
   ></v-text-field>
 </template>
 
@@ -49,6 +48,12 @@ export default {
       type: String,
     },
     /**
+     * Giá trị input
+     */
+    modelValue: {
+      default: "",
+    },
+    /**
      * Template input
      */
     variant: {
@@ -78,13 +83,16 @@ export default {
     /**
      * Xử lý cập nhật 2 chiều dữ liệu
      */
-    const modelValue = computed({
+    const computedValue = computed({
       get() {
-        return proxy.value;
+        if (proxy.inputType == "number" || proxy.inputType == "currency") {
+          return Number(String(proxy.modelValue).replaceAll(/[^0-9.,-]+/g,"")).toLocaleString("it-IT")
+        }
+        return proxy.modelValue;
       },
       set(val) {
-        if (proxy.inputType != "number" && proxy.inputType != "currency") {
-          proxy.$emit("update:modelValue", parseFloat(val));
+        if (proxy.inputType == "number" || proxy.inputType == "currency") {
+          proxy.$emit("update:modelValue", parseFloat(String(val).replaceAll(".", "").replaceAll(",", "")) || null);
           return;
         }
         proxy.$emit("update:modelValue", val);
@@ -113,7 +121,7 @@ export default {
     }
 
     return {
-      modelValue,
+      computedValue,
       isNumber,
       input
     };

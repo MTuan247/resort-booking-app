@@ -170,7 +170,7 @@ export default function SearchScreen() {
               onPress={() => sortData(l)}
             >
               <ListItem.Content>
-                <ListItem.Title style={l.titleStyle}>{l.title}</ListItem.Title>
+                <ListItem.Title style={{ color: l.field == sort && l.order == order ? global.theme.COLORS.PRIMARY : global.theme.COLORS.BLACK }}>{l.title}</ListItem.Title>
               </ListItem.Content>
             </ListItem>
           ))}

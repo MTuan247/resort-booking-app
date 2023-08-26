@@ -28,6 +28,9 @@ module.exports = (sequelize, Sequelize) => {
     cost: {
       type: Sequelize.DECIMAL(22, 4)
     },
+    quantity: {
+      type: Sequelize.INTEGER
+    },
     status: {
       type: Sequelize.INTEGER
     },

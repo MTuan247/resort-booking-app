@@ -24,11 +24,14 @@ export default function SearchCard(props) {
           <Box justifyContent="flex-end" flex={1}>
 
             <HStack alignItems={"center"}>
-              
-              <HStack borderRadius={8} backgroundColor={global.theme.COLORS.PRIMARY} alignItems={"center"}>
-                <Icon color={global.theme.COLORS.WHITE} m={1} size={4} as={FontAwesome5} name='umbrella-beach'></Icon>
-                <Text color={global.theme.COLORS.WHITE} p={1}>{Math.round(props?.rate * 10) / 10}</Text>
-              </HStack>
+              {
+                props?.rate != undefined ? (
+                  <HStack borderRadius={8} backgroundColor={global.theme.COLORS.PRIMARY} alignItems={"center"}>
+                    <Icon color={global.theme.COLORS.WHITE} m={1} size={4} as={FontAwesome5} name='umbrella-beach'></Icon>
+                    <Text color={global.theme.COLORS.WHITE} p={1}>{Math.round(props?.rate * 10) / 10}</Text>
+                  </HStack>
+                ) : (<></>)
+              }
 
               <Text flex={1} color={global.theme.COLORS.PRICE} fontWeight={500} fontSize={16} textAlign="right">{price}</Text>
 
